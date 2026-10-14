@@ -1,12 +1,12 @@
 {
     "name": "@recoms/sdk",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "private": false,
     "repository": {
         "type": "git",
         "url": "git+https://github.com/theromanticsoul/recoms-sdk-typescript.git"
     },
-    "license": "SEE LICENSE IN LICENSE",
+    "license": "MIT",
     "type": "commonjs",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.mjs",

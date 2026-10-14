@@ -20,12 +20,12 @@
         "packageJson": {
             "name": "@recoms/sdk",
             "description": "Server-side SDK for the RECOMS comments API",
-            "license": "SEE LICENSE IN LICENSE"
+            "license": "MIT"
         }
     },
-    "originGitCommit": "4c4527f239ce72a3128ba1e7c8e3e250cad3d570",
+    "originGitCommit": "0de46f65155cbf3a0b19483fed280e11e16cedc4",
     "originGitCommitIsDirty": false,
     "invokedBy": "manual",
-    "requestedVersion": "0.2.2",
-    "sdkVersion": "0.2.2"
+    "requestedVersion": "0.2.3",
+    "sdkVersion": "0.2.3"
 }
