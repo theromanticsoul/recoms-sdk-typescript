@@ -3,6 +3,7 @@
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../BaseClient.js";
 import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../core/headers.js";
+import { getIdempotencyHeaders } from "../../../../core/idempotency.js";
 import * as core from "../../../../core/index.js";
 import { mergeAdditionalBodyParameters } from "../../../../core/requestBody.js";
 import * as environments from "../../../../environments.js";
@@ -78,6 +79,7 @@ export class ReactionsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            getIdempotencyHeaders(),
             mergeOnlyDefinedHeaders({ "Idempotency-Key": idempotencyKey }),
             requestOptions?.headers,
         );
@@ -289,6 +291,7 @@ export class ReactionsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
+            getIdempotencyHeaders(),
             mergeOnlyDefinedHeaders({ "X-Author-User-Id": authorUserId, "Idempotency-Key": idempotencyKey }),
             requestOptions?.headers,
         );
