@@ -1,0 +1,27 @@
+{
+    "cliVersion": "5.155.8",
+    "generatorName": "fernapi/fern-typescript-sdk",
+    "generatorVersion": "3.105.1",
+    "generatorConfig": {
+        "naming": {
+            "namespace": "Recoms",
+            "client": "RecomsClient",
+            "error": "RecomsError"
+        },
+        "fetchSupport": "native",
+        "noSerdeLayer": false,
+        "enableInlineTypes": false,
+        "optional-auth": true,
+        "maxRetries": 0,
+        "packageJson": {
+            "name": "@recoms/sdk",
+            "description": "Server-side SDK for the RECOMS comments API",
+            "license": "SEE LICENSE IN LICENSE"
+        }
+    },
+    "originGitCommit": "6eae529d93d4e73d0a46e6616a8ef4f691a64f89",
+    "originGitCommitIsDirty": false,
+    "invokedBy": "manual",
+    "requestedVersion": "0.2.1",
+    "sdkVersion": "0.2.1"
+}
