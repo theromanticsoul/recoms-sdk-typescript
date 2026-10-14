@@ -14,8 +14,11 @@ export interface DiscussionAnalytics {
     replyRate: number | null;
     /** Threads with published replies in the range, or null when unavailable under current entitlements. */
     threadsWithReplies: number | null;
+    /** Resolved calendar range in UTC; endAt is exclusive and current-day ranges stop at the request time. */
     range: Recoms.DiscussionAnalyticsRange;
+    /** Publication activity grouped by the selected calendar interval in the project timezone. */
     series: Recoms.DiscussionAnalyticsSeriesItem[];
+    /** Resources ranked by first publications in the selected range, including replies. Empty when no resources have publications. */
     topResources: Recoms.DiscussionAnalyticsTopResourcesItem[];
     /** Authors ranked by first publication count; external profile data is not stored here. */
     topAuthors: Recoms.DiscussionAnalyticsTopAuthorsItem[];

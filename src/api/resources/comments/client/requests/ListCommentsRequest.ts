@@ -10,7 +10,7 @@ import type * as Recoms from "../../../../index.js";
  *     }
  */
 export interface ListCommentsRequest {
-    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, non-empty, at most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is an identifier, not a resource URL. */
+    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. Slashes are accepted; URL-encode it in query parameters. This is an identifier, not a resource URL. */
     resourceId: string;
     /** Root comment order. NEWEST: createdAt descending, id descending. OLDEST: createdAt ascending, id ascending. REACTIONS: reactionCount descending, then createdAt/id descending. REPLIES: direct replyCount descending, then createdAt/id descending. The ID tie-breaker makes pagination deterministic. Defaults to NEWEST when omitted. */
     sort?: Recoms.ListCommentsRequestSort;

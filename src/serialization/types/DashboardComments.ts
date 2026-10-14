@@ -10,7 +10,7 @@ export const DashboardComments: core.serialization.ObjectSchema<
     serializers.DashboardComments.Raw,
     Recoms.DashboardComments
 > = core.serialization.object({
-    items: core.serialization.list(DashboardCommentListRow),
+    data: core.serialization.list(DashboardCommentListRow),
     nextCursor: core.serialization.string().nullable(),
     hasComments: core.serialization.boolean(),
     queues: DashboardCommentsQueues,
@@ -18,7 +18,7 @@ export const DashboardComments: core.serialization.ObjectSchema<
 
 export declare namespace DashboardComments {
     export interface Raw {
-        items: DashboardCommentListRow.Raw[];
+        data: DashboardCommentListRow.Raw[];
         nextCursor?: string | null;
         hasComments: boolean;
         queues: DashboardCommentsQueues.Raw;

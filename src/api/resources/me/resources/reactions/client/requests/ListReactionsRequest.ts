@@ -10,7 +10,7 @@
  *     }
  */
 export interface ListReactionsRequest {
-    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, non-empty, at most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is an identifier, not a resource URL. */
+    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. Slashes are accepted; URL-encode it in query parameters. This is an identifier, not a resource URL. */
     resourceId: string;
     /** Optional rendered comment IDs. Repeat commentId in the query (not comma-separated); at most 100 values. Omit to read all of the author's public reactions in this resource. Comments without a reaction are absent. */
     commentIds?: string | string[];
@@ -18,6 +18,6 @@ export interface ListReactionsRequest {
     limit?: number;
     /** Opaque continuation token returned as nextCursor by the same collection. Omit it for the first page. Pass it unchanged with the same project, collection, filters and sort. Do not decode, construct or reuse it for another query; incompatible tokens return INVALID_CURSOR. No fixed maximum token length is defined. */
     cursor?: string;
-    /** Stable, non-empty external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. At most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
     authorUserId: string;
 }

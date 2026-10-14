@@ -2,7 +2,7 @@
 
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../../../BaseClient.js";
-import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../../../core/headers.js";
+import { mergeHeaders } from "../../../../../../core/headers.js";
 import { getIdempotencyHeaders } from "../../../../../../core/idempotency.js";
 import * as core from "../../../../../../core/index.js";
 import { mergeAdditionalBodyParameters } from "../../../../../../core/requestBody.js";
@@ -26,9 +26,8 @@ export class CommentsClient {
     }
 
     /**
-     * Read the number of revisions awaiting review. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+     * Count the latest PENDING and FAILED revisions of live comments, including pending edits of already published comments. Requires comments:read. Deleted comments are excluded. FAILED is a technical check failure, not rejection. These counts and a separate list are not a shared snapshot. Available while frozen.
      *
-     * @param {Recoms.project.QueuesCommentsRequest} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Recoms.BadRequestError}
@@ -43,22 +42,18 @@ export class CommentsClient {
      *     await client.project.comments.queues()
      */
     public queues(
-        request: Recoms.project.QueuesCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.ProjectReviewQueues> {
-        return core.HttpResponsePromise.fromPromise(this.__queues(request, requestOptions));
+    ): core.HttpResponsePromise<Recoms.project.QueuesCommentsResponse> {
+        return core.HttpResponsePromise.fromPromise(this.__queues(requestOptions));
     }
 
     private async __queues(
-        request: Recoms.project.QueuesCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.ProjectReviewQueues>> {
-        const { projectId } = request;
+    ): Promise<core.WithRawResponse<Recoms.project.QueuesCommentsResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-project-id": projectId }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -79,7 +74,7 @@ export class CommentsClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.ProjectReviewQueues.parseOrThrow(_response.body, {
+                data: serializers.project.QueuesCommentsResponse.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,
@@ -93,19 +88,10 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -115,30 +101,12 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
                 case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -160,7 +128,7 @@ export class CommentsClient {
     }
 
     /**
-     * List comments including moderation state. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+     * List roots and replies with their latest moderation revision. Requires comments:read. Filter status follows the latest revision, so an approved comment with a pending edit appears under PENDING. Creation time or current reaction/reply counts determine order; ID breaks ties. Continue with nextCursor and identical filters/sort; null ends pagination. Pages are not a snapshot. hasComments ignores filters; queues describes moderation backlog. Available while frozen; no write permits are consumed.
      *
      * @param {Recoms.project.ListCommentsRequest} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -187,7 +155,7 @@ export class CommentsClient {
         request: Recoms.project.ListCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Recoms.DashboardComments>> {
-        const { search, status, sort, limit, cursor, projectId } = request;
+        const { search, status, sort, limit, cursor } = request;
         const _queryParams: Record<string, unknown> = {
             search,
             status:
@@ -211,7 +179,6 @@ export class CommentsClient {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
-            mergeOnlyDefinedHeaders({ "x-project-id": projectId }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -250,19 +217,10 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -272,30 +230,12 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
                 case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -317,7 +257,7 @@ export class CommentsClient {
     }
 
     /**
-     * Approve or reject the latest pending revision. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+     * Approve or reject the specified latest PENDING or FAILED revision. Requires comments:review. Approval publishes that revision; rejection retains an earlier approved version. A key decision has no verified moderator-account attribution. A stale or already decided revision returns REVISION_ALREADY_REVIEWED. Refresh before another action or after an uncertain network outcome; this operation does not replay Idempotency-Key. Available while frozen.
      *
      * @param {Recoms.project.ReviewComment} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -327,35 +267,35 @@ export class CommentsClient {
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
      * @throws {@link Recoms.ConflictError}
+     * @throws {@link Recoms.ContentTooLargeError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
      *
      * @example
      *     await client.project.comments.review({
-     *         commentId: "commentId",
-     *         revisionId: "revisionId",
+     *         commentId: "0198a6ec-9e00-7000-8000-000000000001",
+     *         revisionId: "0198a6ec-9e00-7000-8000-000000000003",
      *         decision: "APPROVED"
      *     })
      */
     public review(
         request: Recoms.project.ReviewComment,
         requestOptions?: CommentsClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.ProjectActionResult> {
+    ): core.HttpResponsePromise<Recoms.project.ReviewCommentsResponse> {
         return core.HttpResponsePromise.fromPromise(this.__review(request, requestOptions));
     }
 
     private async __review(
         request: Recoms.project.ReviewComment,
         requestOptions?: CommentsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.ProjectActionResult>> {
-        const { commentId, projectId, ..._body } = request;
+    ): Promise<core.WithRawResponse<Recoms.project.ReviewCommentsResponse>> {
+        const { commentId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "x-project-id": projectId }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -385,7 +325,7 @@ export class CommentsClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.ProjectActionResult.parseOrThrow(_response.body, {
+                data: serializers.project.ReviewCommentsResponse.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,
@@ -399,19 +339,10 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -421,30 +352,14 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
                 case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
                 case 409:
-                    throw new Recoms.ConflictError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                case 413:
+                    throw new Recoms.ContentTooLargeError(
+                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -455,7 +370,7 @@ export class CommentsClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

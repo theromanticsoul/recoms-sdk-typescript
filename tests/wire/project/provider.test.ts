@@ -8,13 +8,13 @@ describe("ProviderClient", () => {
     test("configure (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "model" };
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
+        const rawRequestBody = {
+            baseUrl: "https://api.openai.com/v1",
+            model: "gpt-4.1-mini",
+            credential: "example-provider-key-not-a-secret",
+            credentialIntent: "replace",
         };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
@@ -26,15 +26,14 @@ describe("ProviderClient", () => {
             .build();
 
         const response = await client.project.provider.configure({
-            baseUrl: "baseUrl",
-            model: "model",
+            baseUrl: "https://api.openai.com/v1",
+            model: "gpt-4.1-mini",
+            credential: "example-provider-key-not-a-secret",
+            credentialIntent: "replace",
         });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -42,8 +41,8 @@ describe("ProviderClient", () => {
     test("configure (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -56,7 +55,7 @@ describe("ProviderClient", () => {
 
         await expect(async () => {
             return await client.project.provider.configure({
-                baseUrl: "baseUrl",
+                baseUrl: "x",
                 model: "x",
             });
         }).rejects.toThrow(Recoms.BadRequestError);
@@ -65,8 +64,8 @@ describe("ProviderClient", () => {
     test("configure (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -79,7 +78,7 @@ describe("ProviderClient", () => {
 
         await expect(async () => {
             return await client.project.provider.configure({
-                baseUrl: "baseUrl",
+                baseUrl: "x",
                 model: "x",
             });
         }).rejects.toThrow(Recoms.UnauthorizedError);
@@ -88,8 +87,8 @@ describe("ProviderClient", () => {
     test("configure (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -102,7 +101,7 @@ describe("ProviderClient", () => {
 
         await expect(async () => {
             return await client.project.provider.configure({
-                baseUrl: "baseUrl",
+                baseUrl: "x",
                 model: "x",
             });
         }).rejects.toThrow(Recoms.ForbiddenError);
@@ -111,8 +110,8 @@ describe("ProviderClient", () => {
     test("configure (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -125,7 +124,7 @@ describe("ProviderClient", () => {
 
         await expect(async () => {
             return await client.project.provider.configure({
-                baseUrl: "baseUrl",
+                baseUrl: "x",
                 model: "x",
             });
         }).rejects.toThrow(Recoms.NotFoundError);
@@ -134,8 +133,77 @@ describe("ProviderClient", () => {
     test("configure (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { baseUrl: "baseUrl", model: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.configure({
+                baseUrl: "x",
+                model: "x",
+            });
+        }).rejects.toThrow(Recoms.ConflictError);
+    });
+
+    test("configure (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.configure({
+                baseUrl: "x",
+                model: "x",
+            });
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("configure (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { error: { code: "RATE_LIMITED", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.configure({
+                baseUrl: "x",
+                model: "x",
+            });
+        }).rejects.toThrow(Recoms.TooManyRequestsError);
+    });
+
+    test("configure (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -148,22 +216,40 @@ describe("ProviderClient", () => {
 
         await expect(async () => {
             return await client.project.provider.configure({
-                baseUrl: "baseUrl",
+                baseUrl: "x",
                 model: "x",
             });
         }).rejects.toThrow(Recoms.InternalServerError);
+    });
+
+    test("configure (10)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { baseUrl: "x", model: "x" };
+        const rawResponseBody = { error: { code: "PROVIDER_UNAVAILABLE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(502)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.configure({
+                baseUrl: "x",
+                model: "x",
+            });
+        }).rejects.toThrow(Recoms.BadGatewayError);
     });
 
     test("test (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
@@ -174,13 +260,10 @@ describe("ProviderClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.project.provider.test();
+        const response = await client.project.provider.test({});
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -189,7 +272,7 @@ describe("ProviderClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -201,7 +284,7 @@ describe("ProviderClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.provider.test();
+            return await client.project.provider.test({});
         }).rejects.toThrow(Recoms.BadRequestError);
     });
 
@@ -209,7 +292,7 @@ describe("ProviderClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -221,7 +304,7 @@ describe("ProviderClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.provider.test();
+            return await client.project.provider.test({});
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
@@ -229,7 +312,7 @@ describe("ProviderClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -241,7 +324,7 @@ describe("ProviderClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.provider.test();
+            return await client.project.provider.test({});
         }).rejects.toThrow(Recoms.ForbiddenError);
     });
 
@@ -249,7 +332,7 @@ describe("ProviderClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -261,7 +344,7 @@ describe("ProviderClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.provider.test();
+            return await client.project.provider.test({});
         }).rejects.toThrow(Recoms.NotFoundError);
     });
 
@@ -269,7 +352,67 @@ describe("ProviderClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.test({});
+        }).rejects.toThrow(Recoms.ConflictError);
+    });
+
+    test("test (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.test({});
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("test (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "RATE_LIMITED", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.test({});
+        }).rejects.toThrow(Recoms.TooManyRequestsError);
+    });
+
+    test("test (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -281,7 +424,27 @@ describe("ProviderClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.provider.test();
+            return await client.project.provider.test({});
         }).rejects.toThrow(Recoms.InternalServerError);
+    });
+
+    test("test (10)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "PROVIDER_UNAVAILABLE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/provider/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(502)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.provider.test({});
+        }).rejects.toThrow(Recoms.BadGatewayError);
     });
 });

@@ -8,15 +8,15 @@ import type * as Recoms from "../index.js";
 export interface PublicComment {
     /** RECOMS-generated UUIDv7 identifying a comment in the authenticated project. Copy the identifier from a response; UUID input syntax is validated. */
     id: string;
-    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, non-empty, at most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is an identifier, not a resource URL. */
+    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. Slashes are accepted; URL-encode it in query parameters. This is an identifier, not a resource URL. */
     resourceId: string;
-    /** Stable, non-empty external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. At most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
-    userId: string;
+    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    authorUserId: string;
     /** ID of the immediate parent, or null for a root comment. */
     parentId: string | null;
     /** ID of the root comment of this discussion. Equals id for a root comment and remains the same throughout its reply tree. */
     rootId: string;
-    /** Currently published Markdown source, not the latest unapproved edit. Null for a deleted comment or an author-state comment with no published revision. Non-null content follows the Markdown input constraints. */
+    /** Published Markdown source, or null for a deleted structural node. Pending edits are never returned by public reads. */
     content: string | null;
     /** Public visibility state: APPROVED exposes the published Markdown; DELETED preserves a structural node with null content. Pending, failed and rejected submissions without an approved version are excluded from public reads. */
     status: Recoms.PublicCommentStatus;

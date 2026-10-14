@@ -2,7 +2,7 @@
 
 import type { BaseClientOptions, BaseRequestOptions } from "../../../../../../BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "../../../../../../BaseClient.js";
-import { mergeHeaders, mergeOnlyDefinedHeaders } from "../../../../../../core/headers.js";
+import { mergeHeaders } from "../../../../../../core/headers.js";
 import { getIdempotencyHeaders } from "../../../../../../core/idempotency.js";
 import * as core from "../../../../../../core/index.js";
 import { mergeAdditionalBodyParameters } from "../../../../../../core/requestBody.js";
@@ -26,7 +26,7 @@ export class ModerationClient {
     }
 
     /**
-     * testModerationPolicy. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+     * Test draft rules against example text using the current provider. Requires provider:test. No policy or comment is saved; no submission quota is consumed. The provider attempt is recorded and the separate provider-test rate limit applies. ALLOWED and DISALLOWED are successful test outcomes. Provider absence or technical failure returns PROVIDER_UNAVAILABLE rather than a content rejection. RATE_LIMITED includes Retry-After. Available while frozen.
      *
      * @param {Recoms.project.TestModerationPolicy} request
      * @param {ModerationClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -35,34 +35,36 @@ export class ModerationClient {
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
+     * @throws {@link Recoms.ConflictError}
+     * @throws {@link Recoms.ContentTooLargeError}
+     * @throws {@link Recoms.TooManyRequestsError}
      * @throws {@link Recoms.InternalServerError}
+     * @throws {@link Recoms.BadGatewayError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
      *
      * @example
      *     await client.project.moderation.test({
-     *         moderationPolicy: "moderationPolicy",
-     *         exampleComment: "This explanation of **cursor pagination** was helpful."
+     *         moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+     *         exampleComment: "Thank you for this explanation."
      *     })
      */
     public test(
         request: Recoms.project.TestModerationPolicy,
         requestOptions?: ModerationClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.ProjectActionResult> {
+    ): core.HttpResponsePromise<Recoms.project.TestModerationResponse> {
         return core.HttpResponsePromise.fromPromise(this.__test(request, requestOptions));
     }
 
     private async __test(
         request: Recoms.project.TestModerationPolicy,
         requestOptions?: ModerationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.ProjectActionResult>> {
-        const { projectId, ..._body } = request;
+    ): Promise<core.WithRawResponse<Recoms.project.TestModerationResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
             this._options?.headers,
             getIdempotencyHeaders(),
-            mergeOnlyDefinedHeaders({ "x-project-id": projectId }),
             requestOptions?.headers,
         );
         const _response = await core.fetcher({
@@ -78,7 +80,7 @@ export class ModerationClient {
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
             body: mergeAdditionalBodyParameters(
-                serializers.project.TestModerationPolicy.jsonOrThrow(_body, {
+                serializers.project.TestModerationPolicy.jsonOrThrow(request, {
                     unrecognizedObjectKeys: "strip",
                     omitUndefined: true,
                 }),
@@ -92,7 +94,7 @@ export class ModerationClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.ProjectActionResult.parseOrThrow(_response.body, {
+                data: serializers.project.TestModerationResponse.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,
@@ -106,19 +108,10 @@ export class ModerationClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -128,8 +121,14 @@ export class ModerationClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                case 404:
+                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                case 409:
+                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                case 413:
+                    throw new Recoms.ContentTooLargeError(
+                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -138,9 +137,9 @@ export class ModerationClient {
                         }),
                         _response.rawResponse,
                     );
-                case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                case 429:
+                    throw new Recoms.TooManyRequestsError(
+                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -151,7 +150,18 @@ export class ModerationClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 502:
+                    throw new Recoms.BadGatewayError(
+                        serializers.ProviderUnavailableErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

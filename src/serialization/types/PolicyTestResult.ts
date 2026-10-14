@@ -5,14 +5,12 @@ import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { AllowedPolicyTest } from "./AllowedPolicyTest.js";
 import { DisallowedPolicyTest } from "./DisallowedPolicyTest.js";
-import { FailedPolicyTest } from "./FailedPolicyTest.js";
 
 export const PolicyTestResult: core.serialization.Schema<serializers.PolicyTestResult.Raw, Recoms.PolicyTestResult> =
     core.serialization
         .union("outcome", {
             ALLOWED: AllowedPolicyTest,
             DISALLOWED: DisallowedPolicyTest,
-            FAILED: FailedPolicyTest,
         })
         .transform<Recoms.PolicyTestResult>({
             transform: (value) => value,
@@ -20,7 +18,7 @@ export const PolicyTestResult: core.serialization.Schema<serializers.PolicyTestR
         });
 
 export declare namespace PolicyTestResult {
-    export type Raw = PolicyTestResult.Allowed | PolicyTestResult.Disallowed | PolicyTestResult.Failed;
+    export type Raw = PolicyTestResult.Allowed | PolicyTestResult.Disallowed;
 
     export interface Allowed extends AllowedPolicyTest.Raw {
         outcome: "ALLOWED";
@@ -28,9 +26,5 @@ export declare namespace PolicyTestResult {
 
     export interface Disallowed extends DisallowedPolicyTest.Raw {
         outcome: "DISALLOWED";
-    }
-
-    export interface Failed extends FailedPolicyTest.Raw {
-        outcome: "FAILED";
     }
 }

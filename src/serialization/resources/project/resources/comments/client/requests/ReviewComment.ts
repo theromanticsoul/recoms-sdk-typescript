@@ -7,7 +7,7 @@ import { ReviewCommentDecision } from "../../types/ReviewCommentDecision.js";
 
 export const ReviewComment: core.serialization.Schema<
     serializers.project.ReviewComment.Raw,
-    Omit<Recoms.project.ReviewComment, "commentId" | "projectId">
+    Omit<Recoms.project.ReviewComment, "commentId">
 > = core.serialization.object({
     revisionId: core.serialization.string(),
     decision: ReviewCommentDecision,

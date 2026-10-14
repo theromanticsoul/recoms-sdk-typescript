@@ -2,6 +2,9 @@
 
 import type * as Recoms from "../index.js";
 
+/**
+ * Resolved calendar range in UTC; endAt is exclusive and current-day ranges stop at the request time.
+ */
 export interface DiscussionAnalyticsRange {
     /** Inclusive UTC start of the requested calendar range. */
     startAt: Date;

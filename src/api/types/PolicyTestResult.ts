@@ -5,10 +5,7 @@ import type * as Recoms from "../index.js";
 /**
  * Ephemeral test outcome; no comment or policy changes are persisted by the test.
  */
-export type PolicyTestResult =
-    | Recoms.PolicyTestResult.Allowed
-    | Recoms.PolicyTestResult.Disallowed
-    | Recoms.PolicyTestResult.Failed;
+export type PolicyTestResult = Recoms.PolicyTestResult.Allowed | Recoms.PolicyTestResult.Disallowed;
 
 export namespace PolicyTestResult {
     export interface Allowed extends Recoms.AllowedPolicyTest {
@@ -17,9 +14,5 @@ export namespace PolicyTestResult {
 
     export interface Disallowed extends Recoms.DisallowedPolicyTest {
         outcome: "DISALLOWED";
-    }
-
-    export interface Failed extends Recoms.FailedPolicyTest {
-        outcome: "FAILED";
     }
 }

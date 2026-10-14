@@ -2,6 +2,9 @@
 
 import type * as Recoms from "../index.js";
 
+/**
+ * Operation result; inspect its fields as documented by this endpoint.
+ */
 export interface ProjectAnalytics {
     analytics: Recoms.DiscussionAnalytics;
     moderation: Recoms.ModerationAnalytics;

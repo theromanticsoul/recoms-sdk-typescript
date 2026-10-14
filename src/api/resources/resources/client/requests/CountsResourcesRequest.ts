@@ -7,6 +7,6 @@
  *     }
  */
 export interface CountsResourcesRequest {
-    /** Required 1–100 distinct opaque resource IDs, in requested response order. Repeat resourceId in the query; do not comma-separate. IDs may contain slashes and must each satisfy the 512 UTF-8 byte identifier limit. Duplicates are invalid. */
+    /** Required 1–100 distinct opaque resource IDs, in requested response order. Repeat resourceId in the query; do not comma-separate. IDs may contain slashes and must each contain 1–512 Unicode code points. Duplicates are invalid. */
     resourceIds?: string | string[];
 }

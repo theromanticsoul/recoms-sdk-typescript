@@ -24,14 +24,11 @@ export class DashboardClient {
     }
 
     /**
-     * Dashboard bootstrap operation. Only the verified account's memberships are returned; project keys cannot enumerate accounts or projects.
+     * List projects accessible to the authenticated RECOMS account, ordered by membership creation time. Project-only API keys do not grant account-wide access. Returns membership identity and role with each project; organizationId identifies the project, while id identifies the membership. Moderation rules are redacted to empty strings for roles other than owner/admin. Credentials are never returned. An account with no memberships receives an empty data array.
      *
      * @param {DashboardClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
-     * @throws {@link Recoms.ForbiddenError}
-     * @throws {@link Recoms.NotFoundError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
@@ -41,13 +38,13 @@ export class DashboardClient {
      */
     public projects(
         requestOptions?: DashboardClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.AccessibleProject[]> {
+    ): core.HttpResponsePromise<Recoms.ProjectsDashboardResponse> {
         return core.HttpResponsePromise.fromPromise(this.__projects(requestOptions));
     }
 
     private async __projects(
         requestOptions?: DashboardClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.AccessibleProject[]>> {
+    ): Promise<core.WithRawResponse<Recoms.ProjectsDashboardResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -72,7 +69,7 @@ export class DashboardClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.dashboard.projects.Response.parseOrThrow(_response.body, {
+                data: serializers.ProjectsDashboardResponse.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,
@@ -85,42 +82,9 @@ export class DashboardClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -131,7 +95,7 @@ export class DashboardClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -153,23 +117,26 @@ export class DashboardClient {
     }
 
     /**
-     * Returns only provider availability, with no client secrets or database information.
+     * Read the availability of Google and GitHub sign-in for this deployment. This anonymous read returns only boolean availability, never provider credentials, account data or configuration secrets. It does not change state.
      *
      * @param {DashboardClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
      *
      * @example
      *     await client.dashboard.config()
      */
-    public config(requestOptions?: DashboardClient.RequestOptions): core.HttpResponsePromise<Recoms.OAuthAvailability> {
+    public config(
+        requestOptions?: DashboardClient.RequestOptions,
+    ): core.HttpResponsePromise<Recoms.ConfigDashboardResponse> {
         return core.HttpResponsePromise.fromPromise(this.__config(requestOptions));
     }
 
     private async __config(
         requestOptions?: DashboardClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.OAuthAvailability>> {
+    ): Promise<core.WithRawResponse<Recoms.ConfigDashboardResponse>> {
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(this._options?.headers, requestOptions?.headers);
         const _response = await core.fetcher({
             url: core.url.join(
@@ -189,7 +156,7 @@ export class DashboardClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.OAuthAvailability.parseOrThrow(_response.body, {
+                data: serializers.ConfigDashboardResponse.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,
@@ -201,11 +168,25 @@ export class DashboardClient {
         }
 
         if (_response.error.reason === "status-code") {
-            throw new errors.RecomsError({
-                statusCode: _response.error.statusCode,
-                body: _response.error.body,
-                rawResponse: _response.rawResponse,
-            });
+            switch (_response.error.statusCode) {
+                case 500:
+                    throw new Recoms.InternalServerError(
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                default:
+                    throw new errors.RecomsError({
+                        statusCode: _response.error.statusCode,
+                        body: _response.error.body,
+                        rawResponse: _response.rawResponse,
+                    });
+            }
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/dashboard/config");

@@ -53,9 +53,8 @@ const client = new RecomsClient({ token: "YOUR_TOKEN" });
 await client.comments.create({
     idempotencyKey: "0198a6ec-9e00-7000-8000-000000000010",
     resourceId: "article:postgresql-cursors",
-    authorUserId: "usr_43",
-    content: "Thanks for the example.",
-    parentId: "0198a6ec-9e00-7000-8000-000000000001"
+    authorUserId: "usr_42",
+    content: "This explanation of **cursor pagination** was helpful."
 });
 ```
 

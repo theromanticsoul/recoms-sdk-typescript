@@ -9,7 +9,7 @@ export const PublicComment: core.serialization.ObjectSchema<serializers.PublicCo
     core.serialization.object({
         id: core.serialization.string(),
         resourceId: core.serialization.string(),
-        userId: core.serialization.string(),
+        authorUserId: core.serialization.string(),
         parentId: core.serialization.string().nullable(),
         rootId: core.serialization.string(),
         content: core.serialization.string().nullable(),
@@ -26,7 +26,7 @@ export declare namespace PublicComment {
     export interface Raw {
         id: string;
         resourceId: string;
-        userId: string;
+        authorUserId: string;
         parentId?: string | null;
         rootId: string;
         content?: string | null;

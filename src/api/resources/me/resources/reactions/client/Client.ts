@@ -26,6 +26,8 @@ export class ReactionsClient {
     /**
      * Restore liked/disliked UI state after a reload without writing or persisting reaction state in your own database. Your backend authenticates the user before supplying X-Author-User-Id. Returns only that user's existing reactions on APPROVED, non-deleted comments in the key's project and required resource; pending edits preserve existing public visibility. Optionally repeat commentId (maximum 100) to restrict to rendered comments. Ordered by reaction creation time descending, then reaction ID descending. limit defaults to 20 (1–100). Continue using nextCursor with the same project, author, resource and commentId filter set; null ends the list. Read-only, available in frozen projects, consumes no write permits; no separate read rate limiter is applied.
      *
+     * Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
+     *
      * @param {Recoms.me.ListReactionsRequest} request
      * @param {ReactionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -100,19 +102,10 @@ export class ReactionsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Recoms.BadRequestError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                                    unrecognizedObjectKeys: "passthrough",
-                                    allowUnrecognizedUnionMembers: true,
-                                    allowUnrecognizedEnumValues: true,
-                                    skipValidation: true,
-                                    breadcrumbsPrefix: ["response"],
-                                }),
-                                _response.rawResponse,
-                            );
+                            throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                         case 401:
                             throw new Recoms.UnauthorizedError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -123,7 +116,7 @@ export class ReactionsClient {
                             );
                         case 500:
                             throw new Recoms.InternalServerError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,

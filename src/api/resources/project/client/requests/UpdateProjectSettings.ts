@@ -4,11 +4,12 @@ import type * as Recoms from "../../../../index.js";
 
 /**
  * @example
- *     {}
+ *     {
+ *         moderationMode: "HYBRID",
+ *         analyticsTimezone: "Europe/Moscow"
+ *     }
  */
 export interface UpdateProjectSettings {
-    /** Required for Dashboard session requests. Project keys determine their own scope; a supplied identifier must match that scope. */
-    projectId?: string;
     moderationMode?: Recoms.ModerationMode;
     /** Non-empty policy replacing the current policy after trimming; omit to preserve it. */
     moderationPolicy?: string;

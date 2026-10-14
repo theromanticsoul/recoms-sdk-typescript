@@ -83,7 +83,7 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -106,7 +106,7 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -129,7 +129,7 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()

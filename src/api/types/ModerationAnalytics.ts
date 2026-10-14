@@ -18,5 +18,6 @@ export interface ModerationAnalytics {
     moderatorAgreementRate: number | null;
     /** Manual decisions with an automated outcome available for agreement comparison. */
     moderatorAgreementSampleSize: number;
+    /** Automated revision checks grouped by calendar interval; configuration and draft-policy tests are excluded. */
     outcomes: Recoms.ModerationAnalyticsOutcomesItem[];
 }

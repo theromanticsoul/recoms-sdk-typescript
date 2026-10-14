@@ -11,7 +11,7 @@ import type * as Recoms from "../../../../../../index.js";
  *     }
  */
 export interface ListCommentsRequest {
-    /** Optional opaque resource filter; omit to list across this project. May contain slashes. Maximum 512 UTF-8 bytes. */
+    /** Optional opaque resource filter; omit to list across this project. May contain slashes. Accepts 1–512 Unicode code points. */
     resourceId?: string;
     /** Optional latest-submission states, passed as repeated query parameters. PENDING awaits review, FAILED needs review after technical failure, REJECTED was declined, APPROVED was published. Filters the latest revision only, so pending edits of approved comments are included. Omit to include every live submission state. */
     latestRevisionStatuses?:
@@ -23,6 +23,6 @@ export interface ListCommentsRequest {
     limit?: number;
     /** Opaque continuation token returned as nextCursor by the same collection. Omit it for the first page. Pass it unchanged with the same project, collection, filters and sort. Do not decode, construct or reuse it for another query; incompatible tokens return INVALID_CURSOR. No fixed maximum token length is defined. */
     cursor?: string;
-    /** Stable, non-empty external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. At most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
     authorUserId: string;
 }

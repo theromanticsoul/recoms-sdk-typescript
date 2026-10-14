@@ -7,7 +7,7 @@ import { ConfigureProviderCredentialIntent } from "../../types/ConfigureProvider
 
 export const ConfigureProvider: core.serialization.Schema<
     serializers.project.ConfigureProvider.Raw,
-    Omit<Recoms.project.ConfigureProvider, "projectId">
+    Recoms.project.ConfigureProvider
 > = core.serialization.object({
     baseUrl: core.serialization.string(),
     model: core.serialization.string(),

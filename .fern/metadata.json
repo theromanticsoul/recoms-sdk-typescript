@@ -23,9 +23,10 @@
             "license": "MIT"
         }
     },
-    "originGitCommit": "0de46f65155cbf3a0b19483fed280e11e16cedc4",
+    "originGitCommit": "cbae787340de228f294e1b87ebcbdc18b936092c",
     "originGitCommitIsDirty": false,
-    "invokedBy": "manual",
-    "requestedVersion": "0.2.3",
-    "sdkVersion": "0.2.3"
+    "invokedBy": "ci",
+    "requestedVersion": "0.3.0",
+    "ciProvider": "github",
+    "sdkVersion": "0.3.0"
 }

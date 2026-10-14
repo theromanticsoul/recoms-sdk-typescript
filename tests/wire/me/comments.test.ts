@@ -14,7 +14,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: null,
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: null,
@@ -48,7 +48,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: null,
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: null,
@@ -85,7 +85,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: null,
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: "This explanation of **cursor pagination** was helpful.",
@@ -116,7 +116,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: null,
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: "This explanation of **cursor pagination** was helpful.",
@@ -153,7 +153,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: "parentId",
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: "This explanation of **cursor pagination** was helpful.",
@@ -187,7 +187,7 @@ describe("CommentsClient", () => {
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "article:postgresql-cursors",
-                    userId: "usr_42",
+                    authorUserId: "usr_42",
                     parentId: "parentId",
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     content: "This explanation of **cursor pagination** was helpful.",
@@ -219,7 +219,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -241,7 +241,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -263,7 +263,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -289,7 +289,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: null,
@@ -324,7 +324,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: null,
@@ -351,7 +351,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: "This explanation of **cursor pagination** was helpful.",
@@ -383,7 +383,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: "This explanation of **cursor pagination** was helpful.",
@@ -410,7 +410,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: null,
@@ -442,7 +442,7 @@ describe("CommentsClient", () => {
             data: {
                 id: "0198a6ec-9e00-7000-8000-000000000001",
                 resourceId: "article:postgresql-cursors",
-                userId: "usr_42",
+                authorUserId: "usr_42",
                 parentId: null,
                 rootId: "0198a6ec-9e00-7000-8000-000000000001",
                 content: null,
@@ -465,7 +465,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -488,7 +488,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -511,7 +511,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -534,7 +534,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -557,53 +557,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
-
-        server
-            .mockEndpoint()
-            .get("/v1/me/comments/commentId")
-            .header("X-Author-User-Id", "authorUserId")
-            .respondWith()
-            .statusCode(405)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.me.comments.get({
-                authorUserId: "authorUserId",
-                commentId: "commentId",
-            });
-        }).rejects.toThrow(Recoms.MethodNotAllowedError);
-    });
-
-    test("get (9)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
-
-        server
-            .mockEndpoint()
-            .get("/v1/me/comments/commentId")
-            .header("X-Author-User-Id", "authorUserId")
-            .respondWith()
-            .statusCode(413)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.me.comments.get({
-                authorUserId: "authorUserId",
-                commentId: "commentId",
-            });
-        }).rejects.toThrow(Recoms.ContentTooLargeError);
-    });
-
-    test("get (10)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()

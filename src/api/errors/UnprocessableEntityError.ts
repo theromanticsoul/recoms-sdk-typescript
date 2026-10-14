@@ -5,9 +5,9 @@ import * as errors from "../../errors/index.js";
 import type * as Recoms from "../index.js";
 
 export class UnprocessableEntityError extends errors.RecomsError {
-    public declare readonly body: Recoms.ErrorResponse;
+    public declare readonly body: Recoms.CommentNotPublishedErrorResponse;
 
-    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body: Recoms.CommentNotPublishedErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "UnprocessableEntityError",
             statusCode: 422,

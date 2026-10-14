@@ -3,13 +3,11 @@
 /**
  * @example
  *     {
- *         moderationPolicy: "moderationPolicy",
- *         exampleComment: "This explanation of **cursor pagination** was helpful."
+ *         moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+ *         exampleComment: "Thank you for this explanation."
  *     }
  */
 export interface TestModerationPolicy {
-    /** Required for Dashboard session requests. Project keys determine their own scope; a supplied identifier must match that scope. */
-    projectId?: string;
     /** Draft moderation policy used only for this test; it is not saved. */
     moderationPolicy: string;
     /** Markdown source, preserved without trimming. Must contain non-whitespace text and at most 2,000 Unicode code points. U+0000 and unpaired UTF-16 surrogates are forbidden. Render Markdown safely in your application's UI. */

@@ -26,6 +26,8 @@ export class CommentsClient {
     /**
      * Build a my-comments page or recover submissions whose IDs were lost, including comments awaiting review, without duplicating comment state in your database. Your backend authenticates the author supplied in X-Author-User-Id; the project key and author scope every result. Roots and replies are included, deleted comments are excluded. Optional resourceId narrows the resource; repeat latestRevisionStatus to match the latest submission only, including pending edits of already published comments. Returns the existing AuthorComment representation: published content plus latestRevision. NEWEST (default) orders comment creation time and ID descending; OLDEST orders both ascending. limit defaults to 20 (1–100). Copy nextCursor with unchanged project, author, filters and sort; null ends the list. Filter order is immaterial and limit may change; pagination is not a snapshot across requests. Read-only, available in frozen projects, consumes no write permits; no separate read rate limiter is applied.
      *
+     * Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
+     *
      * @param {Recoms.me.ListCommentsRequest} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -118,19 +120,10 @@ export class CommentsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Recoms.BadRequestError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                                    unrecognizedObjectKeys: "passthrough",
-                                    allowUnrecognizedUnionMembers: true,
-                                    allowUnrecognizedEnumValues: true,
-                                    skipValidation: true,
-                                    breadcrumbsPrefix: ["response"],
-                                }),
-                                _response.rawResponse,
-                            );
+                            throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                         case 401:
                             throw new Recoms.UnauthorizedError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -141,7 +134,7 @@ export class CommentsClient {
                             );
                         case 500:
                             throw new Recoms.InternalServerError(
-                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -178,6 +171,8 @@ export class CommentsClient {
     /**
      * Read a comment owned by the externally authenticated user identified by X-Author-User-Id. Your backend must establish this identity; never trust an arbitrary client-supplied user ID. The response contains published content and the latest submitted revision, including PENDING, FAILED or REJECTED. A published comment can remain APPROVED while its edit awaits review. Deleted source is hidden in both content fields. This read does not consume write permits.
      *
+     * Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
+     *
      * @param {Recoms.me.GetCommentsRequest} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -185,8 +180,6 @@ export class CommentsClient {
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
-     * @throws {@link Recoms.MethodNotAllowedError}
-     * @throws {@link Recoms.ContentTooLargeError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
@@ -248,19 +241,10 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -270,52 +254,12 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
                 case 404:
-                    throw new Recoms.NotFoundError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 405:
-                    throw new Recoms.MethodNotAllowedError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 413:
-                    throw new Recoms.ContentTooLargeError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
+                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

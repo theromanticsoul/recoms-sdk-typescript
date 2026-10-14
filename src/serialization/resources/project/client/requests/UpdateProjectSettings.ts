@@ -7,7 +7,7 @@ import { ModerationMode } from "../../../../types/ModerationMode.js";
 
 export const UpdateProjectSettings: core.serialization.Schema<
     serializers.UpdateProjectSettings.Raw,
-    Omit<Recoms.UpdateProjectSettings, "projectId">
+    Recoms.UpdateProjectSettings
 > = core.serialization.object({
     moderationMode: ModerationMode.optional(),
     moderationPolicy: core.serialization.string().optional(),

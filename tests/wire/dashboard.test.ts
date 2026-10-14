@@ -9,36 +9,31 @@ describe("DashboardClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = [
-            {
-                id: "id",
-                role: "owner",
-                organizationId: "organizationId",
-                organization: {
-                    id: "id",
-                    name: "name",
-                    slug: "slug",
-                    createdAt: "2024-01-15T09:30:00Z",
-                    moderationMode: "OFF",
-                    moderationPolicy: "moderationPolicy",
-                    analyticsTimezone: "analyticsTimezone",
-                    billingAccount: {
-                        id: "id",
-                        planCode: "FREE",
-                        accessState: "ACTIVE",
-                        usageAnchorAt: "2024-01-15T09:30:00Z",
-                    },
-                    aiConfiguration: {
-                        source: "MANAGED",
-                        availability: "NOT_CONFIGURED",
-                        baseUrl: null,
-                        model: null,
-                        hasCredential: true,
-                        credentialReadable: true,
+        const rawResponseBody = {
+            data: [
+                {
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
+                    role: "owner",
+                    organizationId: "0198a6ec-9e00-7000-8000-000000000001",
+                    organization: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        name: "name",
+                        slug: "slug",
+                        createdAt: "2024-01-15T09:30:00Z",
+                        moderationMode: "OFF",
+                        moderationPolicy: "moderationPolicy",
+                        analyticsTimezone: "analyticsTimezone",
+                        billingAccount: {
+                            id: "0198a6ec-9e00-7000-8000-000000000001",
+                            planCode: "FREE",
+                            accessState: "ACTIVE",
+                            usageAnchorAt: "2024-01-15T09:30:00Z",
+                        },
+                        aiConfiguration: null,
                     },
                 },
-            },
-        ];
+            ],
+        };
 
         server
             .mockEndpoint()
@@ -49,62 +44,38 @@ describe("DashboardClient", () => {
             .build();
 
         const response = await client.dashboard.projects();
-        expect(response).toEqual([
-            {
-                id: "id",
-                role: "owner",
-                organizationId: "organizationId",
-                organization: {
-                    id: "id",
-                    name: "name",
-                    slug: "slug",
-                    createdAt: new Date("2024-01-15T09:30:00.000Z"),
-                    moderationMode: "OFF",
-                    moderationPolicy: "moderationPolicy",
-                    analyticsTimezone: "analyticsTimezone",
-                    billingAccount: {
-                        id: "id",
-                        planCode: "FREE",
-                        accessState: "ACTIVE",
-                        usageAnchorAt: new Date("2024-01-15T09:30:00.000Z"),
-                    },
-                    aiConfiguration: {
-                        source: "MANAGED",
-                        availability: "NOT_CONFIGURED",
-                        baseUrl: null,
-                        model: null,
-                        hasCredential: true,
-                        credentialReadable: true,
+        expect(response).toEqual({
+            data: [
+                {
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
+                    role: "owner",
+                    organizationId: "0198a6ec-9e00-7000-8000-000000000001",
+                    organization: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        name: "name",
+                        slug: "slug",
+                        createdAt: new Date("2024-01-15T09:30:00.000Z"),
+                        moderationMode: "OFF",
+                        moderationPolicy: "moderationPolicy",
+                        analyticsTimezone: "analyticsTimezone",
+                        billingAccount: {
+                            id: "0198a6ec-9e00-7000-8000-000000000001",
+                            planCode: "FREE",
+                            accessState: "ACTIVE",
+                            usageAnchorAt: new Date("2024-01-15T09:30:00.000Z"),
+                        },
+                        aiConfiguration: null,
                     },
                 },
-            },
-        ]);
+            ],
+        });
     });
 
     test("projects (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
-
-        server
-            .mockEndpoint()
-            .get("/v1/dashboard/projects")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.dashboard.projects();
-        }).rejects.toThrow(Recoms.BadRequestError);
-    });
-
-    test("projects (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -119,49 +90,11 @@ describe("DashboardClient", () => {
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
-    test("projects (4)", async () => {
+    test("projects (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
-
-        server
-            .mockEndpoint()
-            .get("/v1/dashboard/projects")
-            .respondWith()
-            .statusCode(403)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.dashboard.projects();
-        }).rejects.toThrow(Recoms.ForbiddenError);
-    });
-
-    test("projects (5)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
-
-        server
-            .mockEndpoint()
-            .get("/v1/dashboard/projects")
-            .respondWith()
-            .statusCode(404)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.dashboard.projects();
-        }).rejects.toThrow(Recoms.NotFoundError);
-    });
-
-    test("projects (6)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -176,11 +109,11 @@ describe("DashboardClient", () => {
         }).rejects.toThrow(Recoms.InternalServerError);
     });
 
-    test("config", async () => {
+    test("config (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { google: true, github: true };
+        const rawResponseBody = { data: { google: true, github: true } };
 
         server
             .mockEndpoint()
@@ -192,8 +125,29 @@ describe("DashboardClient", () => {
 
         const response = await client.dashboard.config();
         expect(response).toEqual({
-            google: true,
-            github: true,
+            data: {
+                google: true,
+                github: true,
+            },
         });
+    });
+
+    test("config (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .get("/v1/dashboard/config")
+            .respondWith()
+            .statusCode(500)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.dashboard.config();
+        }).rejects.toThrow(Recoms.InternalServerError);
     });
 });

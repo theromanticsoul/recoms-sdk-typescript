@@ -10,7 +10,7 @@ export const AuthorComment: core.serialization.ObjectSchema<serializers.AuthorCo
     core.serialization.object({
         id: core.serialization.string(),
         resourceId: core.serialization.string(),
-        userId: core.serialization.string(),
+        authorUserId: core.serialization.string(),
         parentId: core.serialization.string().nullable(),
         rootId: core.serialization.string(),
         content: core.serialization.string().nullable(),
@@ -28,7 +28,7 @@ export declare namespace AuthorComment {
     export interface Raw {
         id: string;
         resourceId: string;
-        userId: string;
+        authorUserId: string;
         parentId?: string | null;
         rootId: string;
         content?: string | null;

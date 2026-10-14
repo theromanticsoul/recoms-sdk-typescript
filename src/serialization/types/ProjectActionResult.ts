@@ -3,24 +3,16 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
-import { PolicyTestResult } from "./PolicyTestResult.js";
-import { ProjectActionResultStatus } from "./ProjectActionResultStatus.js";
 
 export const ProjectActionResult: core.serialization.ObjectSchema<
     serializers.ProjectActionResult.Raw,
     Recoms.ProjectActionResult
 > = core.serialization.object({
-    status: ProjectActionResultStatus,
     message: core.serialization.string().optional(),
-    savedPolicy: core.serialization.string().optional(),
-    policyTest: PolicyTestResult.optional(),
 });
 
 export declare namespace ProjectActionResult {
     export interface Raw {
-        status: ProjectActionResultStatus.Raw;
         message?: string | null;
-        savedPolicy?: string | null;
-        policyTest?: PolicyTestResult.Raw | null;
     }
 }

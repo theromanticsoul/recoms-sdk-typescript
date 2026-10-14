@@ -6,7 +6,7 @@ import type * as serializers from "../../../../../../index.js";
 
 export const TestModerationPolicy: core.serialization.Schema<
     serializers.project.TestModerationPolicy.Raw,
-    Omit<Recoms.project.TestModerationPolicy, "projectId">
+    Recoms.project.TestModerationPolicy
 > = core.serialization.object({
     moderationPolicy: core.serialization.string(),
     exampleComment: core.serialization.string(),

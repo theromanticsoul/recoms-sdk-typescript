@@ -9,8 +9,8 @@ import type * as Recoms from "../../../../index.js";
 export interface AnalyticsProjectRequest {
     /** Calendar preset in the project's analytics timezone; CUSTOM requires both custom dates. Available history follows project entitlements. */
     preset?: Recoms.AnalyticsRangePreset;
+    /** Inclusive calendar start date, YYYY-MM-DD, in the project's timezone; required for CUSTOM. */
     customStartDate?: string;
+    /** Inclusive calendar end date, YYYY-MM-DD, in the project's timezone; required for CUSTOM. The response endAt is the next day's exclusive boundary, or the request time when the current date is selected. Dates must be ordered and not in the future. */
     customEndDate?: string;
-    /** Required for Dashboard session requests. Project keys determine their own scope; a supplied identifier must match that scope. */
-    projectId?: string;
 }

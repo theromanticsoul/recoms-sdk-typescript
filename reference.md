@@ -13,6 +13,8 @@
 <dd>
 
 Render comment-count badges for an article or resource list without paginating roots and replies. Supply 1–100 distinct resourceId query values in request order; opaque IDs may contain slashes and must not be encoded as path segments. Returns exactly one entry per requested resource, including zeros. commentCount counts live comments with an APPROVED published version at every depth; rootCommentCount counts the subset with no parent. Deleted and never-published submissions are excluded, while pending/failed/rejected edits preserve counts of the previous published version. Counts reflect current committed state, not a stored counter; replyCount uses the same visibility but counts only a comment's direct replies. Project API key only; no author header. Read-only, available in frozen projects, consumes no write permits; no separate read rate limiter is applied.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -79,6 +81,8 @@ await client.resources.counts({
 <dd>
 
 Public reads return approved content and deleted structural nodes only; unapproved revisions are never published. Authenticate from your backend with the project's API key, never from an end-user browser. Returns root comments only, not their replies. The required resourceId is your opaque resource identifier. Default sort is NEWEST; limit defaults to 20 (1–100). To continue, copy nextCursor into cursor with the same resourceId and sort. A null nextCursor ends the list. Replies have a separate listDirectReplies operation. Reads do not consume write permits.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -160,6 +164,8 @@ const response = page.response;
 <dd>
 
 Authenticate the end user in your backend and pass their stable external author ID. The project key selects the tenant; it is not proof of end-user identity. Send JSON with Content-Type: application/json. Bodies must not exceed 16 KiB. Use Idempotency-Key when retrying an action after network failure. Successful AI moderation failure is not an HTTP error: inspect latestRevision.status. Omit parentId for a root comment, or supply the immediate parent to create a reply. A parent must be in the same project and resource and either have approved content or be a deleted node. Moderation may approve, reject, await review, or fail technically. The 201 response confirms the submission, not guaranteed publication. Read its latestRevision.status; only APPROVED content is public. New activity is blocked in frozen projects and when submission quota is unavailable.
+
+Required API-key permission: comments:write. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -228,6 +234,8 @@ await client.comments.create({
 <dd>
 
 Public reads return approved content and deleted structural nodes only; unapproved revisions are never published. Authenticate from your backend with the project's API key, never from an end-user browser. Pending, rejected or failed submissions without a public version return 404. A pending edit does not hide the previous approved text. Deleted comments return DELETED with null content and retain their position in the thread. Use getAuthorComment to inspect an author's unpublished submission.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -293,6 +301,8 @@ await client.comments.get({
 <dd>
 
 The externally authenticated author in X-Author-User-Id must own the comment. Soft deletion hides its source in public and author responses but preserves the structural node, reply relationships and stored revision history for authorized dashboard members. This is not author erasure. Deletion remains available in frozen projects and consumes write permits. A second deletion without replay returns 409 COMMENT_DELETED; use the original Idempotency-Key to retry the same action. No request body is required.
+
+Required API-key permission: comments:write. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -360,6 +370,8 @@ await client.comments.delete({
 <dd>
 
 Authenticate the end user in your backend and pass their stable external author ID. The project key selects the tenant; it is not proof of end-user identity. Send JSON with Content-Type: application/json. Bodies must not exceed 16 KiB. Use Idempotency-Key when retrying an action after network failure. Successful AI moderation failure is not an HTTP error: inspect latestRevision.status. authorUserId must own the comment. The entire Markdown source is replaced by a new revision; resource and parent identity cannot be changed. Existing published content stays visible while an edit is PENDING, FAILED or REJECTED. An APPROVED edit replaces it. Frozen projects and unavailable submission quota block new edits. Deleted comments cannot be edited. Use getAuthorComment to follow moderation state.
+
+Required API-key permission: comments:write. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -428,6 +440,8 @@ await client.comments.update({
 <dd>
 
 Public reads return approved content and deleted structural nodes only; unapproved revisions are never published. Authenticate from your backend with the project's API key, never from an end-user browser. Lists immediate children, not all descendants, ordered by createdAt ascending then id ascending. The parent must be publicly accessible, including deleted nodes. To traverse deeper, call this operation for each reply. Limit defaults to 20 (1–100). Copy nextCursor into cursor for this same parent and project; null ends the list. A cursor from root comments or another parent is invalid.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -510,6 +524,8 @@ const response = page.response;
 <dd>
 
 Authenticate the end user in your backend and pass their external authorUserId. Only comments with approved public content accept reactions. Each user has at most one LIKE or DISLIKE per comment: setting the same type leaves it unchanged and setting the other replaces it. A pending edit does not disable reactions to existing public content. Frozen projects block new reaction activity. This mutation consumes write permits; optional Idempotency-Key provides replay for network retries. Send JSON; the maximum body is 16 KiB.
+
+Required API-key permission: comments:write. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -578,6 +594,8 @@ await client.reactions.set({
 <dd>
 
 Remove the reaction belonging to the external user in X-Author-User-Id. Your backend authenticates this identity. No request body is required. If no reaction exists, return type null and unchanged counters. Deleted comments and comments without approved public content cannot be targeted. Removal remains available in frozen projects and consumes write permits. Use the original Idempotency-Key to retry an uncertain action; other users' reactions are unchanged.
+
+Required API-key permission: comments:write. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -633,7 +651,7 @@ await client.reactions.remove({
 </details>
 
 ## Project
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">get</a>({ ...params }) -> Recoms.ProjectContext</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">get</a>() -> Recoms.GetProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -645,7 +663,7 @@ await client.reactions.remove({
 <dl>
 <dd>
 
-Read project settings and effective membership. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Read project settings, billing state and non-secret provider configuration. Requires project:read. The key selects the project and its configured permissions remain authoritative. Moderation rules and the recommended reset policy are included for management access. Available while frozen; no write permits are consumed.
 </dd>
 </dl>
 </dd>
@@ -676,14 +694,6 @@ await client.project.get();
 <dl>
 <dd>
 
-**request:** `Recoms.GetProjectRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **requestOptions:** `ProjectClient.RequestOptions` 
     
 </dd>
@@ -696,7 +706,7 @@ await client.project.get();
 </dl>
 </details>
 
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">update</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">update</a>({ ...params }) -> Recoms.UpdateProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -708,7 +718,7 @@ await client.project.get();
 <dl>
 <dd>
 
-Update moderation settings or analytics timezone. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Atomically replace the supplied moderation mode, policy or analytics timezone. Requires project:update. Omitted fields remain unchanged; supply at least one. OFF publishes immediately, MANUAL queues review, AI resolves automatically, HYBRID queues suspected violations for review. Rules are trimmed. A timezone changes analytics calendar boundaries, not stored UTC timestamps. Existing decisions are not rerun. Refresh settings before retrying an uncertain outcome; Idempotency-Key replay is not supported. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -723,7 +733,10 @@ Update moderation settings or analytics timezone. Authentication is scoped to th
 <dd>
 
 ```typescript
-await client.project.update();
+await client.project.update({
+    moderationMode: "HYBRID",
+    analyticsTimezone: "Europe/Moscow"
+});
 
 ```
 </dd>
@@ -759,7 +772,7 @@ await client.project.update();
 </dl>
 </details>
 
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">analytics</a>({ ...params }) -> Recoms.ProjectAnalytics</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">analytics</a>({ ...params }) -> Recoms.AnalyticsProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -771,7 +784,7 @@ await client.project.update();
 <dl>
 <dd>
 
-Read discussion and moderation analytics for a period. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Read discussion and moderation metrics in the project's timezone. Requires analytics:read. Discussion counts first publication rather than edits; moderation summary counts unique comments with approval/rejection decisions. CUSTOM requires inclusive YYYY-MM-DD dates; the returned endAt is exclusive and current-day ranges stop at request time. Free history is limited to 90 days; unavailable segmentation metrics are null. planUsage follows the current billing period independently of the selected range. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -822,7 +835,7 @@ await client.project.analytics();
 </dl>
 </details>
 
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">usage</a>({ ...params }) -> Recoms.ProjectUsage | null</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">usage</a>() -> Recoms.UsageProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -834,7 +847,7 @@ await client.project.analytics();
 <dl>
 <dd>
 
-Read project submission usage for the current billing period. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Read submission usage and allowance for the current project billing period. Requires usage:read. Edits count as submissions; freeze/activation does not reset usage. Returns null without billing state. With billing state but no current usage interval, consumed is zero, included follows the plan and period is null. This read never reserves quota and is available while frozen.
 </dd>
 </dl>
 </dd>
@@ -865,14 +878,6 @@ await client.project.usage();
 <dl>
 <dd>
 
-**request:** `Recoms.UsageProjectRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **requestOptions:** `ProjectClient.RequestOptions` 
     
 </dd>
@@ -885,7 +890,7 @@ await client.project.usage();
 </dl>
 </details>
 
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">freeze</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">freeze</a>({ ...params }) -> Recoms.FreezeProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -897,7 +902,7 @@ await client.project.usage();
 <dl>
 <dd>
 
-freezeProject. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Freeze an ACTIVE Free project and release its owner's active Free slot. Requires verified owner access; project-only API keys do not grant this authority. Comments, revisions, reactions and memberships are retained. Reads and removals remain available; new submissions, edits and reaction additions are blocked. Usage is not reset. Activation can restore access subject to Free allocation and membership requirements. Repeating after success returns PROJECT_STATE_CONFLICT; refresh before retrying an uncertain result. Send an empty JSON object.
 </dd>
 </dl>
 </dd>
@@ -912,7 +917,7 @@ freezeProject. Authentication is scoped to the specified project. Dashboard sess
 <dd>
 
 ```typescript
-await client.project.freeze();
+await client.project.freeze({});
 
 ```
 </dd>
@@ -928,7 +933,7 @@ await client.project.freeze();
 <dl>
 <dd>
 
-**request:** `Recoms.FreezeProjectRequest` 
+**request:** `Recoms.EmptyProjectAction` 
     
 </dd>
 </dl>
@@ -948,7 +953,7 @@ await client.project.freeze();
 </dl>
 </details>
 
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">activate</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">activate</a>({ ...params }) -> Recoms.ActivateProjectResponse</code></summary>
 <dl>
 <dd>
 
@@ -960,7 +965,7 @@ await client.project.freeze();
 <dl>
 <dd>
 
-activateProject. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Activate a FROZEN Free project. Requires verified owner access; project-only API keys do not grant this authority. At most two owned Free projects may be ACTIVE. If both slots are occupied, supply another owned ACTIVE Free project's freezeProjectId. Non-owner memberships require confirmMemberRemoval=true and are removed before activation; pending invitations are canceled. Free allocation changes are atomic, but membership removal can precede a failed activation: ACTIVATION_PARTIALLY_COMPLETED requires refreshing billing and members before another attempt. Existing comments and usage are retained. Idempotency-Key replay is not supported.
 </dd>
 </dl>
 </dd>
@@ -975,71 +980,8 @@ activateProject. Authentication is scoped to the specified project. Dashboard se
 <dd>
 
 ```typescript
-await client.project.activate();
-
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**request:** `Recoms.ActivateProjectRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**requestOptions:** `ProjectClient.RequestOptions` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">transferOwnership</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-transferProjectOwnership. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```typescript
-await client.project.transferOwnership({
-    targetUserId: "targetUserId"
+await client.project.activate({
+    confirmMemberRemoval: false
 });
 
 ```
@@ -1056,7 +998,72 @@ await client.project.transferOwnership({
 <dl>
 <dd>
 
-**request:** `Recoms.TransferOwnershipProjectRequest` 
+**request:** `Recoms.ActivateProject` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**requestOptions:** `ProjectClient.RequestOptions` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>client.project.<a href="/src/api/resources/project/client/Client.ts">transferOwnership</a>({ ...params }) -> Recoms.TransferOwnershipProjectResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Transfer the project to another existing member. Requires verified owner access; project-only API keys do not grant this authority. targetUserId identifies the target RECOMS account, not an external comment author or membership. The target becomes the sole owner and the previous owner becomes admin atomically. Existing project data remains. Obtain explicit consent before changing ownership. Missing target membership returns VALIDATION_ERROR; changed ownership returns FORBIDDEN. Refresh membership after an uncertain outcome instead of automatically retrying.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```typescript
+await client.project.transferOwnership({
+    targetUserId: "0198a6ec-9e00-7000-8000-000000000002"
+});
+
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**request:** `Recoms.TransferProjectOwnership` 
     
 </dd>
 </dl>
@@ -1077,7 +1084,7 @@ await client.project.transferOwnership({
 </details>
 
 ## Dashboard
-<details><summary><code>client.dashboard.<a href="/src/api/resources/dashboard/client/Client.ts">projects</a>() -> Recoms.AccessibleProject[]</code></summary>
+<details><summary><code>client.dashboard.<a href="/src/api/resources/dashboard/client/Client.ts">projects</a>() -> Recoms.ProjectsDashboardResponse</code></summary>
 <dl>
 <dd>
 
@@ -1089,7 +1096,7 @@ await client.project.transferOwnership({
 <dl>
 <dd>
 
-Dashboard bootstrap operation. Only the verified account's memberships are returned; project keys cannot enumerate accounts or projects.
+List projects accessible to the authenticated RECOMS account, ordered by membership creation time. Project-only API keys do not grant account-wide access. Returns membership identity and role with each project; organizationId identifies the project, while id identifies the membership. Moderation rules are redacted to empty strings for roles other than owner/admin. Credentials are never returned. An account with no memberships receives an empty data array.
 </dd>
 </dl>
 </dd>
@@ -1132,7 +1139,7 @@ await client.dashboard.projects();
 </dl>
 </details>
 
-<details><summary><code>client.dashboard.<a href="/src/api/resources/dashboard/client/Client.ts">config</a>() -> Recoms.OAuthAvailability</code></summary>
+<details><summary><code>client.dashboard.<a href="/src/api/resources/dashboard/client/Client.ts">config</a>() -> Recoms.ConfigDashboardResponse</code></summary>
 <dl>
 <dd>
 
@@ -1144,7 +1151,7 @@ await client.dashboard.projects();
 <dl>
 <dd>
 
-Returns only provider availability, with no client secrets or database information.
+Read the availability of Google and GitHub sign-in for this deployment. This anonymous read returns only boolean availability, never provider credentials, account data or configuration secrets. It does not change state.
 </dd>
 </dl>
 </dd>
@@ -1201,6 +1208,8 @@ await client.dashboard.config();
 <dd>
 
 Restore liked/disliked UI state after a reload without writing or persisting reaction state in your own database. Your backend authenticates the user before supplying X-Author-User-Id. Returns only that user's existing reactions on APPROVED, non-deleted comments in the key's project and required resource; pending edits preserve existing public visibility. Optionally repeat commentId (maximum 100) to restrict to rendered comments. Ordered by reaction creation time descending, then reaction ID descending. limit defaults to 20 (1–100). Continue using nextCursor with the same project, author, resource and commentId filter set; null ends the list. Read-only, available in frozen projects, consumes no write permits; no separate read rate limiter is applied.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -1287,6 +1296,8 @@ const response = page.response;
 <dd>
 
 Build a my-comments page or recover submissions whose IDs were lost, including comments awaiting review, without duplicating comment state in your database. Your backend authenticates the author supplied in X-Author-User-Id; the project key and author scope every result. Roots and replies are included, deleted comments are excluded. Optional resourceId narrows the resource; repeat latestRevisionStatus to match the latest submission only, including pending edits of already published comments. Returns the existing AuthorComment representation: published content plus latestRevision. NEWEST (default) orders comment creation time and ID descending; OLDEST orders both ascending. limit defaults to 20 (1–100). Copy nextCursor with unchanged project, author, filters and sort; null ends the list. Filter order is immaterial and limit may change; pagination is not a snapshot across requests. Read-only, available in frozen projects, consumes no write permits; no separate read rate limiter is applied.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -1370,6 +1381,8 @@ const response = page.response;
 <dd>
 
 Read a comment owned by the externally authenticated user identified by X-Author-User-Id. Your backend must establish this identity; never trust an arbitrary client-supplied user ID. The response contains published content and the latest submitted revision, including PENDING, FAILED or REJECTED. A published comment can remain APPROVED while its edit awaits review. Deleted source is hidden in both content fields. This read does not consume write permits.
+
+Required API-key permission: comments:read. A valid key without this permission is not sufficient; author identity and ownership requirements still apply where documented.
 </dd>
 </dl>
 </dd>
@@ -1424,7 +1437,7 @@ await client.me.comments.get({
 </details>
 
 ## Project Comments
-<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">queues</a>({ ...params }) -> Recoms.ProjectReviewQueues</code></summary>
+<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">queues</a>() -> Recoms.QueuesCommentsResponse</code></summary>
 <dl>
 <dd>
 
@@ -1436,7 +1449,7 @@ await client.me.comments.get({
 <dl>
 <dd>
 
-Read the number of revisions awaiting review. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Count the latest PENDING and FAILED revisions of live comments, including pending edits of already published comments. Requires comments:read. Deleted comments are excluded. FAILED is a technical check failure, not rejection. These counts and a separate list are not a shared snapshot. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -1467,14 +1480,6 @@ await client.project.comments.queues();
 <dl>
 <dd>
 
-**request:** `Recoms.project.QueuesCommentsRequest` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
 **requestOptions:** `CommentsClient.RequestOptions` 
     
 </dd>
@@ -1499,7 +1504,7 @@ await client.project.comments.queues();
 <dl>
 <dd>
 
-List comments including moderation state. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+List roots and replies with their latest moderation revision. Requires comments:read. Filter status follows the latest revision, so an approved comment with a pending edit appears under PENDING. Creation time or current reaction/reply counts determine order; ID breaks ties. Continue with nextCursor and identical filters/sort; null ends pagination. Pages are not a snapshot. hasComments ignores filters; queues describes moderation backlog. Available while frozen; no write permits are consumed.
 </dd>
 </dl>
 </dd>
@@ -1550,7 +1555,7 @@ await client.project.comments.list();
 </dl>
 </details>
 
-<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">review</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">review</a>({ ...params }) -> Recoms.ReviewCommentsResponse</code></summary>
 <dl>
 <dd>
 
@@ -1562,7 +1567,7 @@ await client.project.comments.list();
 <dl>
 <dd>
 
-Approve or reject the latest pending revision. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Approve or reject the specified latest PENDING or FAILED revision. Requires comments:review. Approval publishes that revision; rejection retains an earlier approved version. A key decision has no verified moderator-account attribution. A stale or already decided revision returns REVISION_ALREADY_REVIEWED. Refresh before another action or after an uncertain network outcome; this operation does not replay Idempotency-Key. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -1578,8 +1583,8 @@ Approve or reject the latest pending revision. Authentication is scoped to the s
 
 ```typescript
 await client.project.comments.review({
-    commentId: "commentId",
-    revisionId: "revisionId",
+    commentId: "0198a6ec-9e00-7000-8000-000000000001",
+    revisionId: "0198a6ec-9e00-7000-8000-000000000003",
     decision: "APPROVED"
 });
 
@@ -1618,7 +1623,7 @@ await client.project.comments.review({
 </details>
 
 ## Project Moderation
-<details><summary><code>client.project.moderation.<a href="/src/api/resources/project/resources/moderation/client/Client.ts">test</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.moderation.<a href="/src/api/resources/project/resources/moderation/client/Client.ts">test</a>({ ...params }) -> Recoms.TestModerationResponse</code></summary>
 <dl>
 <dd>
 
@@ -1630,7 +1635,7 @@ await client.project.comments.review({
 <dl>
 <dd>
 
-testModerationPolicy. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Test draft rules against example text using the current provider. Requires provider:test. No policy or comment is saved; no submission quota is consumed. The provider attempt is recorded and the separate provider-test rate limit applies. ALLOWED and DISALLOWED are successful test outcomes. Provider absence or technical failure returns PROVIDER_UNAVAILABLE rather than a content rejection. RATE_LIMITED includes Retry-After. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -1646,8 +1651,8 @@ testModerationPolicy. Authentication is scoped to the specified project. Dashboa
 
 ```typescript
 await client.project.moderation.test({
-    moderationPolicy: "moderationPolicy",
-    exampleComment: "This explanation of **cursor pagination** was helpful."
+    moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+    exampleComment: "Thank you for this explanation."
 });
 
 ```
@@ -1685,7 +1690,7 @@ await client.project.moderation.test({
 </details>
 
 ## Project Provider
-<details><summary><code>client.project.provider.<a href="/src/api/resources/project/resources/provider/client/Client.ts">configure</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.provider.<a href="/src/api/resources/project/resources/provider/client/Client.ts">configure</a>({ ...params }) -> Recoms.ConfigureProviderResponse</code></summary>
 <dl>
 <dd>
 
@@ -1697,7 +1702,7 @@ await client.project.moderation.test({
 <dl>
 <dd>
 
-configureProjectProvider. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Test and save an OpenAI-compatible HTTPS provider. Requires provider:configure. Unsafe outbound destinations are blocked. Settings are saved only after a successful connection test; a failed candidate does not replace the current configuration. preserve retains an existing credential or accepts an initial one; replace requires credential; remove clears authentication. Credentials are encrypted and never returned. Refresh after PROVIDER_CONFIGURATION_CHANGED; wait Retry-After on RATE_LIMITED. Provider tests do not consume submission quota. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -1713,8 +1718,10 @@ configureProjectProvider. Authentication is scoped to the specified project. Das
 
 ```typescript
 await client.project.provider.configure({
-    baseUrl: "baseUrl",
-    model: "model"
+    baseUrl: "https://api.openai.com/v1",
+    model: "gpt-4.1-mini",
+    credential: "example-provider-key-not-a-secret",
+    credentialIntent: "replace"
 });
 
 ```
@@ -1751,7 +1758,7 @@ await client.project.provider.configure({
 </dl>
 </details>
 
-<details><summary><code>client.project.provider.<a href="/src/api/resources/project/resources/provider/client/Client.ts">test</a>({ ...params }) -> Recoms.ProjectActionResult</code></summary>
+<details><summary><code>client.project.provider.<a href="/src/api/resources/project/resources/provider/client/Client.ts">test</a>({ ...params }) -> Recoms.TestProviderResponse</code></summary>
 <dl>
 <dd>
 
@@ -1763,7 +1770,7 @@ await client.project.provider.configure({
 <dl>
 <dd>
 
-testProjectProvider. Authentication is scoped to the specified project. Dashboard sessions are checked against current membership; project keys cannot access another project.
+Retry the saved provider connection. Requires provider:test. Availability and last test outcome may change and the attempt is recorded, but settings are not replaced. Missing/unreadable credentials or an unusable provider return PROVIDER_UNAVAILABLE; concurrent changes return PROVIDER_CONFIGURATION_CHANGED. Respect Retry-After on RATE_LIMITED. This diagnostic call changes test state, consumes provider-test capacity and does not consume comment submission quota. Available while frozen.
 </dd>
 </dl>
 </dd>
@@ -1778,7 +1785,7 @@ testProjectProvider. Authentication is scoped to the specified project. Dashboar
 <dd>
 
 ```typescript
-await client.project.provider.test();
+await client.project.provider.test({});
 
 ```
 </dd>
@@ -1794,7 +1801,7 @@ await client.project.provider.test();
 <dl>
 <dd>
 
-**request:** `Recoms.project.TestProviderRequest` 
+**request:** `Recoms.EmptyProjectAction` 
     
 </dd>
 </dl>

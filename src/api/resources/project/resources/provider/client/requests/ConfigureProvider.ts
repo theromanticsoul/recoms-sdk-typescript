@@ -5,18 +5,18 @@ import type * as Recoms from "../../../../../../index.js";
 /**
  * @example
  *     {
- *         baseUrl: "baseUrl",
- *         model: "model"
+ *         baseUrl: "https://api.openai.com/v1",
+ *         model: "gpt-4.1-mini",
+ *         credential: "example-provider-key-not-a-secret",
+ *         credentialIntent: "replace"
  *     }
  */
 export interface ConfigureProvider {
-    /** Required for Dashboard session requests. Project keys determine their own scope; a supplied identifier must match that scope. */
-    projectId?: string;
-    /** OpenAI-compatible API base URL. Connection and outbound destination safety are checked before saving. */
+    /** OpenAI-compatible HTTPS API base URL, 1–2,048 Unicode code points after trimming; for example https://api.openai.com/v1. Do not embed a username or password. Private, loopback and otherwise unsafe destinations are blocked by outbound safety checks, including DNS resolution and redirects. A valid URL is not proof that the provider can be reached. */
     baseUrl: string;
-    /** Non-empty model identifier accepted by that provider. */
+    /** Provider model identifier, 1–256 Unicode code points after trimming; for example gpt-4.1-mini. */
     model: string;
-    /** Provider API credential for replace intent; omit otherwise. It is never echoed in responses. */
+    /** Provider API credential, at most 4,096 Unicode code points. Required and non-blank for replace intent. With preserve, an existing credential is retained; on first configuration this value may supply the initial credential. With remove it is ignored. It is never echoed in responses. */
     credential?: string;
     /** Preserve the current credential, replace it with credential, or remove it for a provider without authentication. */
     credentialIntent?: Recoms.project.ConfigureProviderCredentialIntent;

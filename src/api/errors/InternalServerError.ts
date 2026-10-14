@@ -5,9 +5,9 @@ import * as errors from "../../errors/index.js";
 import type * as Recoms from "../index.js";
 
 export class InternalServerError extends errors.RecomsError {
-    public declare readonly body: Recoms.ErrorResponse;
+    public declare readonly body: Recoms.InternalErrorResponse;
 
-    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body: Recoms.InternalErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "InternalServerError",
             statusCode: 500,

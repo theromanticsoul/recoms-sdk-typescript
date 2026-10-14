@@ -9,15 +9,10 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            moderationPolicy: "moderationPolicy",
-            exampleComment: "This explanation of **cursor pagination** was helpful.",
+            moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+            exampleComment: "Thank you for this explanation.",
         };
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawResponseBody = { data: { message: "message", policyTest: { outcome: "ALLOWED" } } };
 
         server
             .mockEndpoint()
@@ -29,15 +24,15 @@ describe("ModerationClient", () => {
             .build();
 
         const response = await client.project.moderation.test({
-            moderationPolicy: "moderationPolicy",
-            exampleComment: "This explanation of **cursor pagination** was helpful.",
+            moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+            exampleComment: "Thank you for this explanation.",
         });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
+                policyTest: {
+                    outcome: "ALLOWED",
+                },
             },
         });
     });
@@ -46,7 +41,7 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -69,7 +64,7 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -92,7 +87,7 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -115,7 +110,7 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -138,7 +133,76 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/moderation/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.moderation.test({
+                moderationPolicy: "x",
+                exampleComment: "x",
+            });
+        }).rejects.toThrow(Recoms.ConflictError);
+    });
+
+    test("test (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/moderation/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.moderation.test({
+                moderationPolicy: "x",
+                exampleComment: "x",
+            });
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("test (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
+        const rawResponseBody = { error: { code: "RATE_LIMITED", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/moderation/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.moderation.test({
+                moderationPolicy: "x",
+                exampleComment: "x",
+            });
+        }).rejects.toThrow(Recoms.TooManyRequestsError);
+    });
+
+    test("test (9)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -155,5 +219,28 @@ describe("ModerationClient", () => {
                 exampleComment: "x",
             });
         }).rejects.toThrow(Recoms.InternalServerError);
+    });
+
+    test("test (10)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
+        const rawResponseBody = { error: { code: "PROVIDER_UNAVAILABLE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/moderation/test")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(502)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.moderation.test({
+                moderationPolicy: "x",
+                exampleComment: "x",
+            });
+        }).rejects.toThrow(Recoms.BadGatewayError);
     });
 });

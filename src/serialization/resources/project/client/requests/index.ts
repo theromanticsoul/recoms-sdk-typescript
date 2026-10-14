@@ -1,4 +1,3 @@
-export { ActivateProjectRequest } from "./ActivateProjectRequest.js";
-export { FreezeProjectRequest } from "./FreezeProjectRequest.js";
-export { TransferOwnershipProjectRequest } from "./TransferOwnershipProjectRequest.js";
+export { ActivateProject } from "./ActivateProject.js";
+export { TransferProjectOwnership } from "./TransferProjectOwnership.js";
 export { UpdateProjectSettings } from "./UpdateProjectSettings.js";

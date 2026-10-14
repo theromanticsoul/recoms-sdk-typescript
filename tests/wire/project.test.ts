@@ -10,31 +10,26 @@ describe("ProjectClient", () => {
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            project: {
-                id: "id",
-                name: "name",
-                slug: "slug",
-                createdAt: "2024-01-15T09:30:00Z",
-                moderationMode: "OFF",
-                moderationPolicy: "moderationPolicy",
-                analyticsTimezone: "analyticsTimezone",
-                billingAccount: {
-                    id: "id",
-                    planCode: "FREE",
-                    accessState: "ACTIVE",
-                    usageAnchorAt: "2024-01-15T09:30:00Z",
+            data: {
+                project: {
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
+                    name: "Product discussions",
+                    slug: "product-discussions",
+                    createdAt: "2026-08-14T12:00:00Z",
+                    moderationMode: "MANUAL",
+                    moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+                    analyticsTimezone: "UTC",
+                    billingAccount: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        planCode: "FREE",
+                        accessState: "ACTIVE",
+                        usageAnchorAt: "2026-08-14T12:00:00Z",
+                    },
+                    aiConfiguration: null,
                 },
-                aiConfiguration: {
-                    source: "MANAGED",
-                    availability: "NOT_CONFIGURED",
-                    baseUrl: "baseUrl",
-                    model: "model",
-                    hasCredential: true,
-                    credentialReadable: true,
-                },
+                membership: { id: "0198a6ec-9e00-7000-8000-000000000001", role: "owner" },
+                defaultModerationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
             },
-            membership: { id: "id", role: "owner" },
-            defaultModerationPolicy: "defaultModerationPolicy",
         };
 
         server
@@ -47,34 +42,29 @@ describe("ProjectClient", () => {
 
         const response = await client.project.get();
         expect(response).toEqual({
-            project: {
-                id: "id",
-                name: "name",
-                slug: "slug",
-                createdAt: new Date("2024-01-15T09:30:00.000Z"),
-                moderationMode: "OFF",
-                moderationPolicy: "moderationPolicy",
-                analyticsTimezone: "analyticsTimezone",
-                billingAccount: {
-                    id: "id",
-                    planCode: "FREE",
-                    accessState: "ACTIVE",
-                    usageAnchorAt: new Date("2024-01-15T09:30:00.000Z"),
+            data: {
+                project: {
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
+                    name: "Product discussions",
+                    slug: "product-discussions",
+                    createdAt: new Date("2026-08-14T12:00:00.000Z"),
+                    moderationMode: "MANUAL",
+                    moderationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
+                    analyticsTimezone: "UTC",
+                    billingAccount: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        planCode: "FREE",
+                        accessState: "ACTIVE",
+                        usageAnchorAt: new Date("2026-08-14T12:00:00.000Z"),
+                    },
+                    aiConfiguration: null,
                 },
-                aiConfiguration: {
-                    source: "MANAGED",
-                    availability: "NOT_CONFIGURED",
-                    baseUrl: "baseUrl",
-                    model: "model",
-                    hasCredential: true,
-                    credentialReadable: true,
+                membership: {
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
+                    role: "owner",
                 },
+                defaultModerationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
             },
-            membership: {
-                id: "id",
-                role: "owner",
-            },
-            defaultModerationPolicy: "defaultModerationPolicy",
         });
     });
 
@@ -82,7 +72,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -101,7 +91,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -120,7 +110,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -139,7 +129,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -158,7 +148,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -176,12 +166,9 @@ describe("ProjectClient", () => {
     test("update (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {};
+        const rawRequestBody = { moderationMode: "HYBRID", analyticsTimezone: "Europe/Moscow" };
         const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
+            data: { message: "message", savedPolicy: "Reject unsolicited advertising; allow relevant discussion." },
         };
 
         server
@@ -193,13 +180,14 @@ describe("ProjectClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.project.update();
+        const response = await client.project.update({
+            moderationMode: "HYBRID",
+            analyticsTimezone: "Europe/Moscow",
+        });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
+                savedPolicy: "Reject unsolicited advertising; allow relevant discussion.",
             },
         });
     });
@@ -208,7 +196,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -228,7 +216,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -248,7 +236,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -268,7 +256,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -288,7 +276,27 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .patch("/v1/project/settings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.update();
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("update (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -309,52 +317,61 @@ describe("ProjectClient", () => {
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            analytics: {
-                publishedComments: 1,
-                contributors: 1,
-                replyRate: 1.1,
-                threadsWithReplies: 1,
-                range: {
-                    startAt: "2024-01-15T09:30:00Z",
-                    endAt: "2024-01-15T09:30:00Z",
-                    bucket: "HOUR",
-                    preset: "TODAY",
-                },
-                series: [
-                    {
-                        bucketStartAt: "2024-01-15T09:30:00Z",
-                        rootComments: 1,
-                        replies: 1,
-                        contributors: 1,
-                        newContributors: null,
-                        returningContributors: null,
+            data: {
+                analytics: {
+                    publishedComments: 100,
+                    contributors: 24,
+                    replyRate: 20,
+                    threadsWithReplies: null,
+                    range: {
+                        startAt: "2026-08-01T00:00:00Z",
+                        endAt: "2026-08-31T00:00:00Z",
+                        bucket: "DAY",
+                        preset: "LAST_30_DAYS",
                     },
-                ],
-                topResources: [{ resourceId: "resourceId", publishedComments: 1, contributors: 1, replyRate: null }],
-                topAuthors: [{ authorUserId: "authorUserId", publishedComments: 1 }],
-                comparison: { publishedComments: 1, contributors: 1, replyRate: 1.1, threadsWithReplies: 1 },
-                contributorSegmentationAvailable: true,
-            },
-            moderation: {
-                aiModerationAttempts: 1,
-                autoResolvedRate: 1.1,
-                aiFailureRate: 1.1,
-                medianManualReviewTimeMs: 1.1,
-                moderatorAgreementRate: 1.1,
-                moderatorAgreementSampleSize: 1,
-                outcomes: [{ bucketStartAt: "2024-01-15T09:30:00Z", allowed: 1, disallowed: 1, failed: 1 }],
-            },
-            summary: {
-                approved: 1,
-                blocked: 1,
-                blockedRate: 1.1,
-                comparison: { approved: 1, blocked: 1 },
-                series: [{ approved: 1, blocked: 1, bucketStartAt: "2024-01-15T09:30:00Z" }],
-            },
-            planUsage: {
-                consumed: 1,
-                included: 1,
-                period: { startAt: "2024-01-15T09:30:00Z", endAt: "2024-01-15T09:30:00Z" },
+                    series: [
+                        {
+                            bucketStartAt: "2026-08-14T00:00:00Z",
+                            rootComments: 80,
+                            replies: 20,
+                            contributors: 24,
+                            newContributors: null,
+                            returningContributors: null,
+                        },
+                    ],
+                    topResources: [
+                        {
+                            resourceId: "article:postgresql-cursors",
+                            publishedComments: 100,
+                            contributors: 24,
+                            replyRate: 20,
+                        },
+                    ],
+                    topAuthors: [{ authorUserId: "usr_42", publishedComments: 12 }],
+                    comparison: null,
+                    contributorSegmentationAvailable: false,
+                },
+                moderation: {
+                    aiModerationAttempts: 0,
+                    autoResolvedRate: null,
+                    aiFailureRate: null,
+                    medianManualReviewTimeMs: 120000,
+                    moderatorAgreementRate: null,
+                    moderatorAgreementSampleSize: 0,
+                    outcomes: [{ bucketStartAt: "2024-01-15T09:30:00Z", allowed: 1, disallowed: 1, failed: 1 }],
+                },
+                summary: {
+                    approved: 100,
+                    blocked: 25,
+                    blockedRate: 20,
+                    comparison: { approved: 80, blocked: 20 },
+                    series: [{ approved: 100, blocked: 25, bucketStartAt: "2026-08-14T00:00:00Z" }],
+                },
+                planUsage: {
+                    consumed: 42,
+                    included: 1000,
+                    period: { startAt: "2026-08-14T12:00:00Z", endAt: "2026-09-14T12:00:00Z" },
+                },
             },
         };
 
@@ -368,87 +385,84 @@ describe("ProjectClient", () => {
 
         const response = await client.project.analytics();
         expect(response).toEqual({
-            analytics: {
-                publishedComments: 1,
-                contributors: 1,
-                replyRate: 1.1,
-                threadsWithReplies: 1,
-                range: {
-                    startAt: new Date("2024-01-15T09:30:00.000Z"),
-                    endAt: new Date("2024-01-15T09:30:00.000Z"),
-                    bucket: "HOUR",
-                    preset: "TODAY",
+            data: {
+                analytics: {
+                    publishedComments: 100,
+                    contributors: 24,
+                    replyRate: 20,
+                    threadsWithReplies: null,
+                    range: {
+                        startAt: new Date("2026-08-01T00:00:00.000Z"),
+                        endAt: new Date("2026-08-31T00:00:00.000Z"),
+                        bucket: "DAY",
+                        preset: "LAST_30_DAYS",
+                    },
+                    series: [
+                        {
+                            bucketStartAt: new Date("2026-08-14T00:00:00.000Z"),
+                            rootComments: 80,
+                            replies: 20,
+                            contributors: 24,
+                            newContributors: null,
+                            returningContributors: null,
+                        },
+                    ],
+                    topResources: [
+                        {
+                            resourceId: "article:postgresql-cursors",
+                            publishedComments: 100,
+                            contributors: 24,
+                            replyRate: 20,
+                        },
+                    ],
+                    topAuthors: [
+                        {
+                            authorUserId: "usr_42",
+                            publishedComments: 12,
+                        },
+                    ],
+                    comparison: null,
+                    contributorSegmentationAvailable: false,
                 },
-                series: [
-                    {
-                        bucketStartAt: new Date("2024-01-15T09:30:00.000Z"),
-                        rootComments: 1,
-                        replies: 1,
-                        contributors: 1,
-                        newContributors: null,
-                        returningContributors: null,
-                    },
-                ],
-                topResources: [
-                    {
-                        resourceId: "resourceId",
-                        publishedComments: 1,
-                        contributors: 1,
-                        replyRate: null,
-                    },
-                ],
-                topAuthors: [
-                    {
-                        authorUserId: "authorUserId",
-                        publishedComments: 1,
-                    },
-                ],
-                comparison: {
-                    publishedComments: 1,
-                    contributors: 1,
-                    replyRate: 1.1,
-                    threadsWithReplies: 1,
+                moderation: {
+                    aiModerationAttempts: 0,
+                    autoResolvedRate: null,
+                    aiFailureRate: null,
+                    medianManualReviewTimeMs: 120000,
+                    moderatorAgreementRate: null,
+                    moderatorAgreementSampleSize: 0,
+                    outcomes: [
+                        {
+                            bucketStartAt: new Date("2024-01-15T09:30:00.000Z"),
+                            allowed: 1,
+                            disallowed: 1,
+                            failed: 1,
+                        },
+                    ],
                 },
-                contributorSegmentationAvailable: true,
-            },
-            moderation: {
-                aiModerationAttempts: 1,
-                autoResolvedRate: 1.1,
-                aiFailureRate: 1.1,
-                medianManualReviewTimeMs: 1.1,
-                moderatorAgreementRate: 1.1,
-                moderatorAgreementSampleSize: 1,
-                outcomes: [
-                    {
-                        bucketStartAt: new Date("2024-01-15T09:30:00.000Z"),
-                        allowed: 1,
-                        disallowed: 1,
-                        failed: 1,
+                summary: {
+                    approved: 100,
+                    blocked: 25,
+                    blockedRate: 20,
+                    comparison: {
+                        approved: 80,
+                        blocked: 20,
                     },
-                ],
-            },
-            summary: {
-                approved: 1,
-                blocked: 1,
-                blockedRate: 1.1,
-                comparison: {
-                    approved: 1,
-                    blocked: 1,
+                    series: [
+                        {
+                            approved: 100,
+                            blocked: 25,
+                            bucketStartAt: new Date("2026-08-14T00:00:00.000Z"),
+                        },
+                    ],
                 },
-                series: [
-                    {
-                        approved: 1,
-                        blocked: 1,
-                        bucketStartAt: new Date("2024-01-15T09:30:00.000Z"),
+                planUsage: {
+                    consumed: 42,
+                    included: 1000,
+                    period: {
+                        startAt: new Date("2026-08-14T12:00:00.000Z"),
+                        endAt: new Date("2026-09-14T12:00:00.000Z"),
                     },
-                ],
-            },
-            planUsage: {
-                consumed: 1,
-                included: 1,
-                period: {
-                    startAt: new Date("2024-01-15T09:30:00.000Z"),
-                    endAt: new Date("2024-01-15T09:30:00.000Z"),
                 },
             },
         });
@@ -458,7 +472,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -477,7 +491,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -496,7 +510,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -515,7 +529,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -534,7 +548,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -554,20 +568,24 @@ describe("ProjectClient", () => {
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            consumed: 1,
-            included: 1,
-            period: { startAt: "2024-01-15T09:30:00Z", endAt: "2024-01-15T09:30:00Z" },
+            data: {
+                consumed: 42,
+                included: 1000,
+                period: { startAt: "2026-08-14T12:00:00Z", endAt: "2026-09-14T12:00:00Z" },
+            },
         };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(200).jsonBody(rawResponseBody).build();
 
         const response = await client.project.usage();
         expect(response).toEqual({
-            consumed: 1,
-            included: 1,
-            period: {
-                startAt: new Date("2024-01-15T09:30:00.000Z"),
-                endAt: new Date("2024-01-15T09:30:00.000Z"),
+            data: {
+                consumed: 42,
+                included: 1000,
+                period: {
+                    startAt: new Date("2026-08-14T12:00:00.000Z"),
+                    endAt: new Date("2026-09-14T12:00:00.000Z"),
+                },
             },
         });
     });
@@ -576,7 +594,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
 
@@ -589,7 +607,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
 
@@ -602,7 +620,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
@@ -615,7 +633,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
 
@@ -628,7 +646,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(500).jsonBody(rawResponseBody).build();
 
@@ -641,12 +659,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
@@ -657,13 +670,10 @@ describe("ProjectClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.project.freeze();
+        const response = await client.project.freeze({});
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -672,7 +682,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -684,7 +694,7 @@ describe("ProjectClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.freeze();
+            return await client.project.freeze({});
         }).rejects.toThrow(Recoms.BadRequestError);
     });
 
@@ -692,7 +702,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -704,7 +714,7 @@ describe("ProjectClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.freeze();
+            return await client.project.freeze({});
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
@@ -712,7 +722,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -724,7 +734,7 @@ describe("ProjectClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.freeze();
+            return await client.project.freeze({});
         }).rejects.toThrow(Recoms.ForbiddenError);
     });
 
@@ -732,7 +742,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -744,7 +754,7 @@ describe("ProjectClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.freeze();
+            return await client.project.freeze({});
         }).rejects.toThrow(Recoms.NotFoundError);
     });
 
@@ -752,7 +762,47 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/freeze")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.freeze({});
+        }).rejects.toThrow(Recoms.ConflictError);
+    });
+
+    test("freeze (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/freeze")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.freeze({});
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("freeze (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -764,20 +814,15 @@ describe("ProjectClient", () => {
             .build();
 
         await expect(async () => {
-            return await client.project.freeze();
+            return await client.project.freeze({});
         }).rejects.toThrow(Recoms.InternalServerError);
     });
 
     test("activate (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {};
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawRequestBody = { confirmMemberRemoval: false };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
@@ -788,13 +833,12 @@ describe("ProjectClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.project.activate();
+        const response = await client.project.activate({
+            confirmMemberRemoval: false,
+        });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -803,7 +847,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -823,7 +867,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -843,7 +887,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -863,7 +907,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -883,7 +927,47 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/activate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.activate();
+        }).rejects.toThrow(Recoms.ConflictError);
+    });
+
+    test("activate (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/activate")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.activate();
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("activate (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -902,13 +986,8 @@ describe("ProjectClient", () => {
     test("transferOwnership (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawRequestBody = { targetUserId: "0198a6ec-9e00-7000-8000-000000000002" };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
@@ -920,14 +999,11 @@ describe("ProjectClient", () => {
             .build();
 
         const response = await client.project.transferOwnership({
-            targetUserId: "targetUserId",
+            targetUserId: "0198a6ec-9e00-7000-8000-000000000002",
         });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -936,7 +1012,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -958,7 +1034,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -980,7 +1056,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -1002,7 +1078,7 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -1024,7 +1100,29 @@ describe("ProjectClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { targetUserId: "targetUserId" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/ownership")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.transferOwnership({
+                targetUserId: "targetUserId",
+            });
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("transferOwnership (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { targetUserId: "targetUserId" };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()

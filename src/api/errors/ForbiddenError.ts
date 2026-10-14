@@ -2,12 +2,9 @@
 
 import type * as core from "../../core/index.js";
 import * as errors from "../../errors/index.js";
-import type * as Recoms from "../index.js";
 
 export class ForbiddenError extends errors.RecomsError {
-    public declare readonly body: Recoms.ErrorResponse;
-
-    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body?: unknown, rawResponse?: core.RawResponse) {
         super({
             message: "ForbiddenError",
             statusCode: 403,

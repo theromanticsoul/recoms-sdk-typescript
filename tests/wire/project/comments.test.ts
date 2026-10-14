@@ -9,7 +9,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { pending: 1, failed: 1 };
+        const rawResponseBody = { data: { pending: 3, failed: 1 } };
 
         server
             .mockEndpoint()
@@ -21,8 +21,10 @@ describe("CommentsClient", () => {
 
         const response = await client.project.comments.queues();
         expect(response).toEqual({
-            pending: 1,
-            failed: 1,
+            data: {
+                pending: 3,
+                failed: 1,
+            },
         });
     });
 
@@ -30,7 +32,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -49,7 +51,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -68,7 +70,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -87,7 +89,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -106,7 +108,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -126,22 +128,22 @@ describe("CommentsClient", () => {
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
         const rawResponseBody = {
-            items: [
+            data: [
                 {
-                    id: "id",
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "resourceId",
                     authorUserId: "authorUserId",
-                    parentId: "parentId",
-                    rootId: "rootId",
+                    parentId: "0198a6ec-9e00-7000-8000-000000000001",
+                    rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     latestRevision: {
-                        id: "id",
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
                         content: null,
                         status: "APPROVED",
                         sequence: 1,
                         createdAt: "2024-01-15T09:30:00Z",
                         reviewedAt: null,
-                        reviewedByUserId: null,
-                        reviewedBy: null,
+                        reviewedByUserId: "0198a6ec-9e00-7000-8000-000000000001",
+                        reviewedBy: { id: "0198a6ec-9e00-7000-8000-000000000001", name: "name", image: null },
                         aiProvider: null,
                         aiModel: null,
                         aiOutcome: null,
@@ -158,9 +160,9 @@ describe("CommentsClient", () => {
                     updatedAt: "2024-01-15T09:30:00Z",
                 },
             ],
-            nextCursor: "nextCursor",
-            hasComments: true,
-            queues: { pending: 1, failed: 1 },
+            nextCursor: null,
+            hasComments: false,
+            queues: { pending: 0, failed: 0 },
         };
 
         server
@@ -173,22 +175,26 @@ describe("CommentsClient", () => {
 
         const response = await client.project.comments.list();
         expect(response).toEqual({
-            items: [
+            data: [
                 {
-                    id: "id",
+                    id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "resourceId",
                     authorUserId: "authorUserId",
-                    parentId: "parentId",
-                    rootId: "rootId",
+                    parentId: "0198a6ec-9e00-7000-8000-000000000001",
+                    rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     latestRevision: {
-                        id: "id",
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
                         content: null,
                         status: "APPROVED",
                         sequence: 1,
                         createdAt: new Date("2024-01-15T09:30:00.000Z"),
                         reviewedAt: null,
-                        reviewedByUserId: null,
-                        reviewedBy: null,
+                        reviewedByUserId: "0198a6ec-9e00-7000-8000-000000000001",
+                        reviewedBy: {
+                            id: "0198a6ec-9e00-7000-8000-000000000001",
+                            name: "name",
+                            image: null,
+                        },
                         aiProvider: null,
                         aiModel: null,
                         aiOutcome: null,
@@ -205,11 +211,11 @@ describe("CommentsClient", () => {
                     updatedAt: new Date("2024-01-15T09:30:00.000Z"),
                 },
             ],
-            nextCursor: "nextCursor",
-            hasComments: true,
+            nextCursor: null,
+            hasComments: false,
             queues: {
-                pending: 1,
-                failed: 1,
+                pending: 0,
+                failed: 0,
             },
         });
     });
@@ -218,7 +224,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -237,7 +243,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -256,7 +262,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -275,7 +281,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -294,7 +300,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()
@@ -312,17 +318,12 @@ describe("CommentsClient", () => {
     test("review (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = {
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: { outcome: "ALLOWED" },
-        };
+        const rawRequestBody = { revisionId: "0198a6ec-9e00-7000-8000-000000000003", decision: "APPROVED" };
+        const rawResponseBody = { data: { message: "message" } };
 
         server
             .mockEndpoint()
-            .post("/v1/project/comments/commentId/review")
+            .post("/v1/project/comments/0198a6ec-9e00-7000-8000-000000000001/review")
             .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(200)
@@ -330,16 +331,13 @@ describe("CommentsClient", () => {
             .build();
 
         const response = await client.project.comments.review({
-            commentId: "commentId",
-            revisionId: "revisionId",
+            commentId: "0198a6ec-9e00-7000-8000-000000000001",
+            revisionId: "0198a6ec-9e00-7000-8000-000000000003",
             decision: "APPROVED",
         });
         expect(response).toEqual({
-            status: "success",
-            message: "message",
-            savedPolicy: "savedPolicy",
-            policyTest: {
-                outcome: "ALLOWED",
+            data: {
+                message: "message",
             },
         });
     });
@@ -348,7 +346,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -372,7 +370,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
 
         server
             .mockEndpoint()
@@ -396,7 +394,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -420,7 +418,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -444,7 +442,7 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()
@@ -468,7 +466,31 @@ describe("CommentsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
-        const rawResponseBody = { error: { code: "VALIDATION_ERROR", message: "message" } };
+        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+
+        server
+            .mockEndpoint()
+            .post("/v1/project/comments/commentId/review")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(413)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.project.comments.review({
+                commentId: "commentId",
+                revisionId: "revisionId",
+                decision: "APPROVED",
+            });
+        }).rejects.toThrow(Recoms.ContentTooLargeError);
+    });
+
+    test("review (8)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { revisionId: "revisionId", decision: "APPROVED" };
+        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
 
         server
             .mockEndpoint()

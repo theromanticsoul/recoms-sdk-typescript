@@ -4,7 +4,7 @@
  * Current published comment counts for one requested resource.
  */
 export interface ResourceCommentCount {
-    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, non-empty, at most 512 UTF-8 bytes; U+0000 and unpaired UTF-16 surrogates are forbidden. This is an identifier, not a resource URL. */
+    /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. Slashes are accepted; URL-encode it in query parameters. This is an identifier, not a resource URL. */
     resourceId: string;
     /** Number of live comments with an APPROVED published version, including roots and replies at every depth. Unpublished submissions and deleted nodes are excluded; pending edits retain their published version. Zero for an empty resource; no product maximum is defined. */
     commentCount: number;

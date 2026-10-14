@@ -4,7 +4,7 @@ import type * as Recoms from "../index.js";
 
 export interface DashboardComments {
     /** Matching comments in deterministic order; empty when no rows match. */
-    items: Recoms.DashboardCommentListRow[];
+    data: Recoms.DashboardCommentListRow[];
     /** Opaque continuation cursor for identical filters and sort; null at the end of the list. */
     nextCursor: string | null;
     /** Whether the project contains any comment nodes, independent of the current filters. */
