@@ -3,7 +3,7 @@
 import type * as Recoms from "../index.js";
 
 /**
- * Project settings and non-secret billing/provider state. Sensitive moderation rules are redacted for read-only roles.
+ * Project settings, moderation rules and non-secret billing/provider state. Reading project context requires project:read.
  */
 export interface Project {
     /** RECOMS-generated UUID. Copy it from the corresponding project, member, comment or revision response; identifiers are not interchangeable. */
@@ -15,7 +15,7 @@ export interface Project {
     /** Event timestamp in RFC 3339 UTC format. */
     createdAt: Date;
     moderationMode: Recoms.ModerationMode;
-    /** Project moderation policy, available only with management access. */
+    /** Current saved moderation policy. Reading it with a project key requires project:read. */
     moderationPolicy: string;
     /** IANA timezone used to calculate analytics. */
     analyticsTimezone: string;

@@ -663,7 +663,7 @@ await client.reactions.remove({
 <dl>
 <dd>
 
-Read project settings, billing state and non-secret provider configuration. Requires project:read. The key selects the project and its configured permissions remain authoritative. Moderation rules and the recommended reset policy are included for management access. Available while frozen; no write permits are consumed.
+Read project settings, billing state and non-secret provider configuration. Requires project:read. The key selects the project. access returns its keyId and effective permissions in resource:action form, allowing you to choose available operations before sending a request. Permissions can change; the API checks each request independently. Moderation rules and the recommended reset policy are included for management access. Available while frozen; no write permits are consumed.
 </dd>
 </dl>
 </dd>
@@ -1188,7 +1188,7 @@ await client.project.comments.queues();
 </dl>
 </details>
 
-<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">list</a>({ ...params }) -> Recoms.DashboardComments</code></summary>
+<details><summary><code>client.project.comments.<a href="/src/api/resources/project/resources/comments/client/Client.ts">list</a>({ ...params }) -> Recoms.ProjectComments</code></summary>
 <dl>
 <dd>
 

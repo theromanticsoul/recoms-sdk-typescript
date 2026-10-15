@@ -3,7 +3,7 @@
 /**
  * Current moderator profile, or null when no profile is available.
  */
-export interface DashboardCommentRevisionReviewedBy {
+export interface ProjectCommentRevisionReviewedBy {
     /** RECOMS-generated UUID. Copy it from the corresponding project, member, comment or revision response; identifiers are not interchangeable. */
     id: string;
     /** Verified moderator's current display name. */

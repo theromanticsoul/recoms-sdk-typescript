@@ -47,34 +47,6 @@ describe("CommentsClient", () => {
             .mockEndpoint()
             .get("/v1/project/review-queues")
             .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.project.comments.queues();
-        }).rejects.toThrow(Recoms.BadRequestError);
-    });
-
-    test("queues (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            error: {
-                code: "VALIDATION_ERROR",
-                message: "message",
-                details: [
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                ],
-            },
-        };
-
-        server
-            .mockEndpoint()
-            .get("/v1/project/review-queues")
-            .respondWith()
             .statusCode(401)
             .jsonBody(rawResponseBody)
             .build();
@@ -84,7 +56,7 @@ describe("CommentsClient", () => {
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
-    test("queues (4)", async () => {
+    test("queues (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -112,7 +84,7 @@ describe("CommentsClient", () => {
         }).rejects.toThrow(Recoms.ForbiddenError);
     });
 
-    test("queues (5)", async () => {
+    test("queues (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -140,7 +112,7 @@ describe("CommentsClient", () => {
         }).rejects.toThrow(Recoms.NotFoundError);
     });
 
-    test("queues (6)", async () => {
+    test("queues (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

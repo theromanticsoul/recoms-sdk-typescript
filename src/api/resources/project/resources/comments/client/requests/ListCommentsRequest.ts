@@ -10,9 +10,9 @@ export interface ListCommentsRequest {
     /** Text search in comment content; at most 512 Unicode code points. Omit or use an empty string for no text filter. */
     search?: string;
     /** Filter by latest revision decision or deleted node. ALL and unpublished states require moderation access. */
-    status?: Recoms.DashboardCommentStatus;
+    status?: Recoms.ProjectCommentStatus;
     /** Creation time descending or ascending, total reactions descending, or published direct reply count descending; identifier breaks ties. */
-    sort?: Recoms.DashboardCommentSort;
+    sort?: Recoms.ProjectCommentSort;
     /** Maximum rows in this page, inclusive range 1–100. */
     limit?: number;
     /** Opaque nextCursor from the preceding page. Keep filters and sort unchanged; incompatible tokens return INVALID_CURSOR. Omit to restart. Pagination is not a snapshot. */

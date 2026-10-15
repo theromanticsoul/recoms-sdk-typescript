@@ -4,19 +4,19 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { Project } from "./Project.js";
-import { ProjectMembership } from "./ProjectMembership.js";
+import { ProjectKeyAccess } from "./ProjectKeyAccess.js";
 
 export const ProjectContext: core.serialization.ObjectSchema<serializers.ProjectContext.Raw, Recoms.ProjectContext> =
     core.serialization.object({
         project: Project,
-        membership: ProjectMembership,
+        access: ProjectKeyAccess,
         defaultModerationPolicy: core.serialization.string(),
     });
 
 export declare namespace ProjectContext {
     export interface Raw {
         project: Project.Raw;
-        membership: ProjectMembership.Raw;
+        access: ProjectKeyAccess.Raw;
         defaultModerationPolicy: string;
     }
 }

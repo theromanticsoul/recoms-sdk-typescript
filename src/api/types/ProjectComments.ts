@@ -2,13 +2,13 @@
 
 import type * as Recoms from "../index.js";
 
-export interface DashboardComments {
+export interface ProjectComments {
     /** Matching comments in deterministic order; empty when no rows match. */
-    data: Recoms.DashboardCommentListRow[];
+    data: Recoms.ProjectCommentListRow[];
     /** Opaque continuation cursor for identical filters and sort; null at the end of the list. */
     nextCursor: string | null;
     /** Whether the project contains any comment nodes, independent of the current filters. */
     hasComments: boolean;
     /** Moderation queue sizes for the project; hidden from read-only roles. */
-    queues: Recoms.DashboardCommentsQueues;
+    queues: Recoms.ProjectCommentsQueues;
 }

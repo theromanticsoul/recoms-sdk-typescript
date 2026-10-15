@@ -3,43 +3,43 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
-import { DashboardCommentRevisionAiOutcome } from "./DashboardCommentRevisionAiOutcome.js";
-import { DashboardCommentRevisionReviewedBy } from "./DashboardCommentRevisionReviewedBy.js";
-import { DashboardCommentRevisionStatus } from "./DashboardCommentRevisionStatus.js";
+import { ProjectCommentRevisionAiOutcome } from "./ProjectCommentRevisionAiOutcome.js";
+import { ProjectCommentRevisionReviewedBy } from "./ProjectCommentRevisionReviewedBy.js";
+import { ProjectCommentRevisionStatus } from "./ProjectCommentRevisionStatus.js";
 
-export const DashboardCommentRevision: core.serialization.ObjectSchema<
-    serializers.DashboardCommentRevision.Raw,
-    Recoms.DashboardCommentRevision
+export const ProjectCommentRevision: core.serialization.ObjectSchema<
+    serializers.ProjectCommentRevision.Raw,
+    Recoms.ProjectCommentRevision
 > = core.serialization.object({
     id: core.serialization.string(),
     content: core.serialization.string().nullable(),
-    status: DashboardCommentRevisionStatus,
+    status: ProjectCommentRevisionStatus,
     sequence: core.serialization.number(),
     createdAt: core.serialization.date(),
     reviewedAt: core.serialization.date().nullable(),
     reviewedByUserId: core.serialization.string().nullable(),
-    reviewedBy: DashboardCommentRevisionReviewedBy.nullable(),
+    reviewedBy: ProjectCommentRevisionReviewedBy.nullable(),
     aiProvider: core.serialization.string().nullable(),
     aiModel: core.serialization.string().nullable(),
-    aiOutcome: DashboardCommentRevisionAiOutcome.nullable(),
+    aiOutcome: ProjectCommentRevisionAiOutcome.nullable(),
     aiReason: core.serialization.string().nullable(),
     aiFailureReason: core.serialization.string().nullable(),
     aiCheckedAt: core.serialization.date().nullable(),
 });
 
-export declare namespace DashboardCommentRevision {
+export declare namespace ProjectCommentRevision {
     export interface Raw {
         id: string;
         content?: string | null;
-        status: DashboardCommentRevisionStatus.Raw;
+        status: ProjectCommentRevisionStatus.Raw;
         sequence: number;
         createdAt: string;
         reviewedAt?: string | null;
         reviewedByUserId?: string | null;
-        reviewedBy?: DashboardCommentRevisionReviewedBy.Raw | null;
+        reviewedBy?: ProjectCommentRevisionReviewedBy.Raw | null;
         aiProvider?: string | null;
         aiModel?: string | null;
-        aiOutcome?: DashboardCommentRevisionAiOutcome.Raw | null;
+        aiOutcome?: ProjectCommentRevisionAiOutcome.Raw | null;
         aiReason?: string | null;
         aiFailureReason?: string | null;
         aiCheckedAt?: string | null;

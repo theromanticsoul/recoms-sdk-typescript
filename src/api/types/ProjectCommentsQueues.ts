@@ -3,7 +3,7 @@
 /**
  * Moderation queue sizes for the project; hidden from read-only roles.
  */
-export interface DashboardCommentsQueues {
+export interface ProjectCommentsQueues {
     /** Latest revisions waiting for manual review; zero for roles without moderation access. */
     pending: number;
     /** Latest revisions with a failed automated check; zero for roles without moderation access. */

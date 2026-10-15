@@ -5,13 +5,13 @@ import type * as Recoms from "../index.js";
 /**
  * Latest submitted revision, including drafts when the caller has moderation access; null if absent.
  */
-export interface DashboardCommentRevision {
+export interface ProjectCommentRevision {
     /** RECOMS-generated UUID. Copy it from the corresponding project, member, comment or revision response; identifiers are not interchangeable. */
     id: string;
     /** Markdown submitted for this revision; null when its content has been removed. */
     content: string | null;
     /** Revision decision: published, awaiting review, technical check failure, or rejected. */
-    status: Recoms.DashboardCommentRevisionStatus;
+    status: Recoms.ProjectCommentRevisionStatus;
     /** Monotonically increasing revision number within the comment; starts at one. */
     sequence: number;
     /** Event timestamp in RFC 3339 UTC format. */
@@ -21,13 +21,13 @@ export interface DashboardCommentRevision {
     /** Verified RECOMS moderator account ID, or null for decisions without account attribution. */
     reviewedByUserId: string | null;
     /** Current moderator profile, or null when no profile is available. */
-    reviewedBy: Recoms.DashboardCommentRevisionReviewedBy | null;
+    reviewedBy: Recoms.ProjectCommentRevisionReviewedBy | null;
     /** Provider used for the automated check, or null when no check occurred. */
     aiProvider: string | null;
     /** Model used for the automated check, or null when no check occurred. */
     aiModel: string | null;
     /** Automated check outcome; null when no check occurred. It does not replace the revision's final decision. */
-    aiOutcome: Recoms.DashboardCommentRevisionAiOutcome | null;
+    aiOutcome: Recoms.ProjectCommentRevisionAiOutcome | null;
     /** Policy violation explanation returned by the automated check, or null. */
     aiReason: string | null;
     /** Safe technical failure category, or null when the check did not fail. */

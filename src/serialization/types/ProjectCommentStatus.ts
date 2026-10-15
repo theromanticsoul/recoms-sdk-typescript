@@ -4,11 +4,11 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const DashboardCommentStatus: core.serialization.Schema<
-    serializers.DashboardCommentStatus.Raw,
-    Recoms.DashboardCommentStatus
+export const ProjectCommentStatus: core.serialization.Schema<
+    serializers.ProjectCommentStatus.Raw,
+    Recoms.ProjectCommentStatus
 > = core.serialization.enum_(["ALL", "APPROVED", "PENDING", "FAILED", "REJECTED", "DELETED"]);
 
-export declare namespace DashboardCommentStatus {
+export declare namespace ProjectCommentStatus {
     export type Raw = "ALL" | "APPROVED" | "PENDING" | "FAILED" | "REJECTED" | "DELETED";
 }

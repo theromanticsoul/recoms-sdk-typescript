@@ -27,7 +27,10 @@ describe("ProjectClient", () => {
                     },
                     aiConfiguration: null,
                 },
-                membership: { id: "0198a6ec-9e00-7000-8000-000000000001", role: "owner" },
+                access: {
+                    keyId: "0198a6ec-9e00-7000-8000-000000000001",
+                    permissions: ["comments:read", "project:read"],
+                },
                 defaultModerationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
             },
         };
@@ -59,9 +62,9 @@ describe("ProjectClient", () => {
                     },
                     aiConfiguration: null,
                 },
-                membership: {
-                    id: "0198a6ec-9e00-7000-8000-000000000001",
-                    role: "owner",
+                access: {
+                    keyId: "0198a6ec-9e00-7000-8000-000000000001",
+                    permissions: ["comments:read", "project:read"],
                 },
                 defaultModerationPolicy: "Reject unsolicited advertising; allow relevant discussion.",
             },
@@ -69,34 +72,6 @@ describe("ProjectClient", () => {
     });
 
     test("get (2)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            error: {
-                code: "VALIDATION_ERROR",
-                message: "message",
-                details: [
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                ],
-            },
-        };
-
-        server
-            .mockEndpoint()
-            .get("/v1/project/context")
-            .respondWith()
-            .statusCode(400)
-            .jsonBody(rawResponseBody)
-            .build();
-
-        await expect(async () => {
-            return await client.project.get();
-        }).rejects.toThrow(Recoms.BadRequestError);
-    });
-
-    test("get (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -124,7 +99,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
-    test("get (4)", async () => {
+    test("get (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -152,7 +127,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.ForbiddenError);
     });
 
-    test("get (5)", async () => {
+    test("get (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -180,7 +155,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.NotFoundError);
     });
 
-    test("get (6)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -749,28 +724,6 @@ describe("ProjectClient", () => {
             },
         };
 
-        server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
-
-        await expect(async () => {
-            return await client.project.usage();
-        }).rejects.toThrow(Recoms.BadRequestError);
-    });
-
-    test("usage (3)", async () => {
-        const server = mockServerPool.createServer();
-        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-
-        const rawResponseBody = {
-            error: {
-                code: "VALIDATION_ERROR",
-                message: "message",
-                details: [
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
-                ],
-            },
-        };
-
         server.mockEndpoint().get("/v1/project/usage").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -778,7 +731,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.UnauthorizedError);
     });
 
-    test("usage (4)", async () => {
+    test("usage (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -800,7 +753,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.ForbiddenError);
     });
 
-    test("usage (5)", async () => {
+    test("usage (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -822,7 +775,7 @@ describe("ProjectClient", () => {
         }).rejects.toThrow(Recoms.NotFoundError);
     });
 
-    test("usage (6)", async () => {
+    test("usage (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

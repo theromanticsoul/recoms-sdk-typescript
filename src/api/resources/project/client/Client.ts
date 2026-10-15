@@ -44,11 +44,10 @@ export class ProjectClient {
     }
 
     /**
-     * Read project settings, billing state and non-secret provider configuration. Requires project:read. The key selects the project and its configured permissions remain authoritative. Moderation rules and the recommended reset policy are included for management access. Available while frozen; no write permits are consumed.
+     * Read project settings, billing state and non-secret provider configuration. Requires project:read. The key selects the project. access returns its keyId and effective permissions in resource:action form, allowing you to choose available operations before sending a request. Permissions can change; the API checks each request independently. Moderation rules and the recommended reset policy are included for management access. Available while frozen; no write permits are consumed.
      *
      * @param {ProjectClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
@@ -103,17 +102,6 @@ export class ProjectClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -480,7 +468,6 @@ export class ProjectClient {
      *
      * @param {ProjectClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
@@ -535,17 +522,6 @@ export class ProjectClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {

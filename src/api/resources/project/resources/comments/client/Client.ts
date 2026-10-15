@@ -30,7 +30,6 @@ export class CommentsClient {
      *
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
@@ -87,17 +86,6 @@ export class CommentsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(
-                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
                         serializers.ErrorResponse.parseOrThrow(_response.error.body, {
@@ -174,27 +162,27 @@ export class CommentsClient {
     public list(
         request: Recoms.project.ListCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.DashboardComments> {
+    ): core.HttpResponsePromise<Recoms.ProjectComments> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Recoms.project.ListCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.DashboardComments>> {
+    ): Promise<core.WithRawResponse<Recoms.ProjectComments>> {
         const { search, status, sort, limit, cursor } = request;
         const _queryParams: Record<string, unknown> = {
             search,
             status:
                 status != null
-                    ? serializers.DashboardCommentStatus.jsonOrThrow(status, {
+                    ? serializers.ProjectCommentStatus.jsonOrThrow(status, {
                           unrecognizedObjectKeys: "strip",
                           omitUndefined: true,
                       })
                     : undefined,
             sort:
                 sort != null
-                    ? serializers.DashboardCommentSort.jsonOrThrow(sort, {
+                    ? serializers.ProjectCommentSort.jsonOrThrow(sort, {
                           unrecognizedObjectKeys: "strip",
                           omitUndefined: true,
                       })
@@ -230,7 +218,7 @@ export class CommentsClient {
         });
         if (_response.ok) {
             return {
-                data: serializers.DashboardComments.parseOrThrow(_response.body, {
+                data: serializers.ProjectComments.parseOrThrow(_response.body, {
                     unrecognizedObjectKeys: "passthrough",
                     allowUnrecognizedUnionMembers: true,
                     allowUnrecognizedEnumValues: true,

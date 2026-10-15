@@ -3,11 +3,11 @@
 import type * as Recoms from "../index.js";
 
 /**
- * Operation result; inspect its fields as documented by this endpoint.
+ * Current project settings and the authenticated key's access.
  */
 export interface ProjectContext {
     project: Recoms.Project;
-    membership: Recoms.ProjectMembership;
+    access: Recoms.ProjectKeyAccess;
     /** Recommended default policy used when resetting project moderation rules. */
     defaultModerationPolicy: string;
 }

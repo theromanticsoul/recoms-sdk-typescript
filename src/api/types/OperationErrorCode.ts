@@ -20,10 +20,6 @@ export const OperationErrorCode = {
     ProjectFrozen: "PROJECT_FROZEN",
     ProviderUnavailable: "PROVIDER_UNAVAILABLE",
     ProviderConfigurationChanged: "PROVIDER_CONFIGURATION_CHANGED",
-    ProjectStateConflict: "PROJECT_STATE_CONFLICT",
-    MemberRemovalConfirmationRequired: "MEMBER_REMOVAL_CONFIRMATION_REQUIRED",
-    FreeProjectSelectionRequired: "FREE_PROJECT_SELECTION_REQUIRED",
-    ActivationPartiallyCompleted: "ACTIVATION_PARTIALLY_COMPLETED",
     InternalError: "INTERNAL_ERROR",
 } as const;
 export type OperationErrorCode = (typeof OperationErrorCode)[keyof typeof OperationErrorCode];

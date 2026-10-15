@@ -2,7 +2,7 @@
 
 import type * as Recoms from "../index.js";
 
-export interface DashboardCommentListRow {
+export interface ProjectCommentListRow {
     /** RECOMS-generated UUID. Copy it from the corresponding project, member, comment or revision response; identifiers are not interchangeable. */
     id: string;
     /** Opaque integrator resource identifier, scoped to the project. */
@@ -13,9 +13,9 @@ export interface DashboardCommentListRow {
     parentId: string | null;
     /** Identifier of the thread's root comment. */
     rootId: string;
-    latestRevision: Recoms.DashboardCommentRevision | null;
-    /** Dashboard state derived from the latest revision, or DELETED for a removed node. */
-    status: Recoms.DashboardCommentListRowStatus;
+    latestRevision: Recoms.ProjectCommentRevision | null;
+    /** Moderation state derived from the latest revision, or DELETED for a removed node. */
+    status: Recoms.ProjectCommentListRowStatus;
     /** Currently published, non-deleted direct replies. */
     replyCount: number;
     /** Current LIKE reactions. */

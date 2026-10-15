@@ -4,11 +4,11 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const DashboardCommentSort: core.serialization.Schema<
-    serializers.DashboardCommentSort.Raw,
-    Recoms.DashboardCommentSort
+export const ProjectCommentSort: core.serialization.Schema<
+    serializers.ProjectCommentSort.Raw,
+    Recoms.ProjectCommentSort
 > = core.serialization.enum_(["NEWEST", "OLDEST", "REACTIONS", "REPLIES"]);
 
-export declare namespace DashboardCommentSort {
+export declare namespace ProjectCommentSort {
     export type Raw = "NEWEST" | "OLDEST" | "REACTIONS" | "REPLIES";
 }

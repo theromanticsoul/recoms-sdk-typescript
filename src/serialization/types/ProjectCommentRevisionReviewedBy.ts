@@ -4,16 +4,16 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const DashboardCommentRevisionReviewedBy: core.serialization.ObjectSchema<
-    serializers.DashboardCommentRevisionReviewedBy.Raw,
-    Recoms.DashboardCommentRevisionReviewedBy
+export const ProjectCommentRevisionReviewedBy: core.serialization.ObjectSchema<
+    serializers.ProjectCommentRevisionReviewedBy.Raw,
+    Recoms.ProjectCommentRevisionReviewedBy
 > = core.serialization.object({
     id: core.serialization.string(),
     name: core.serialization.string(),
     image: core.serialization.string().nullable(),
 });
 
-export declare namespace DashboardCommentRevisionReviewedBy {
+export declare namespace ProjectCommentRevisionReviewedBy {
     export interface Raw {
         id: string;
         name: string;

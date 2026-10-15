@@ -4,15 +4,15 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 
-export const DashboardCommentsQueues: core.serialization.ObjectSchema<
-    serializers.DashboardCommentsQueues.Raw,
-    Recoms.DashboardCommentsQueues
+export const ProjectCommentsQueues: core.serialization.ObjectSchema<
+    serializers.ProjectCommentsQueues.Raw,
+    Recoms.ProjectCommentsQueues
 > = core.serialization.object({
     pending: core.serialization.number(),
     failed: core.serialization.number(),
 });
 
-export declare namespace DashboardCommentsQueues {
+export declare namespace ProjectCommentsQueues {
     export interface Raw {
         pending: number;
         failed: number;

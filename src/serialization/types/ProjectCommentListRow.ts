@@ -3,20 +3,20 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
-import { DashboardCommentListRowStatus } from "./DashboardCommentListRowStatus.js";
-import { DashboardCommentRevision } from "./DashboardCommentRevision.js";
+import { ProjectCommentListRowStatus } from "./ProjectCommentListRowStatus.js";
+import { ProjectCommentRevision } from "./ProjectCommentRevision.js";
 
-export const DashboardCommentListRow: core.serialization.ObjectSchema<
-    serializers.DashboardCommentListRow.Raw,
-    Recoms.DashboardCommentListRow
+export const ProjectCommentListRow: core.serialization.ObjectSchema<
+    serializers.ProjectCommentListRow.Raw,
+    Recoms.ProjectCommentListRow
 > = core.serialization.object({
     id: core.serialization.string(),
     resourceId: core.serialization.string(),
     authorUserId: core.serialization.string(),
     parentId: core.serialization.string().nullable(),
     rootId: core.serialization.string(),
-    latestRevision: DashboardCommentRevision.nullable(),
-    status: DashboardCommentListRowStatus,
+    latestRevision: ProjectCommentRevision.nullable(),
+    status: ProjectCommentListRowStatus,
     replyCount: core.serialization.number(),
     likeCount: core.serialization.number(),
     dislikeCount: core.serialization.number(),
@@ -25,15 +25,15 @@ export const DashboardCommentListRow: core.serialization.ObjectSchema<
     updatedAt: core.serialization.date(),
 });
 
-export declare namespace DashboardCommentListRow {
+export declare namespace ProjectCommentListRow {
     export interface Raw {
         id: string;
         resourceId: string;
         authorUserId: string;
         parentId?: string | null;
         rootId: string;
-        latestRevision?: DashboardCommentRevision.Raw | null;
-        status: DashboardCommentListRowStatus.Raw;
+        latestRevision?: ProjectCommentRevision.Raw | null;
+        status: ProjectCommentListRowStatus.Raw;
         replyCount: number;
         likeCount: number;
         dislikeCount: number;
