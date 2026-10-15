@@ -5,9 +5,9 @@ import * as errors from "../../errors/index.js";
 import type * as Recoms from "../index.js";
 
 export class BadGatewayError extends errors.RecomsError {
-    public declare readonly body: Recoms.ProviderUnavailableErrorResponse;
+    public declare readonly body: Recoms.ErrorResponse;
 
-    constructor(body: Recoms.ProviderUnavailableErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "BadGatewayError",
             statusCode: 502,

@@ -5,9 +5,9 @@ import * as errors from "../../errors/index.js";
 import type * as Recoms from "../index.js";
 
 export class MethodNotAllowedError extends errors.RecomsError {
-    public declare readonly body: Recoms.MethodNotAllowedErrorResponse;
+    public declare readonly body: Recoms.ErrorResponse;
 
-    constructor(body: Recoms.MethodNotAllowedErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "MethodNotAllowedError",
             statusCode: 405,

@@ -83,7 +83,16 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -106,7 +115,16 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -129,7 +147,48 @@ describe("ReactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
+
+        server
+            .mockEndpoint()
+            .get("/v1/me/reactions")
+            .header("X-Author-User-Id", "authorUserId")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.me.reactions.list({
+                authorUserId: "authorUserId",
+                resourceId: "x",
+            });
+        }).rejects.toThrow(Recoms.ForbiddenError);
+    });
+
+    test("list (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()

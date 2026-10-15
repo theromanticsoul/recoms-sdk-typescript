@@ -110,10 +110,19 @@ export class ProviderClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -123,14 +132,41 @@ export class ProviderClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ConflictError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -141,7 +177,7 @@ export class ProviderClient {
                     );
                 case 429:
                     throw new Recoms.TooManyRequestsError(
-                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -152,7 +188,7 @@ export class ProviderClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -163,7 +199,7 @@ export class ProviderClient {
                     );
                 case 502:
                     throw new Recoms.BadGatewayError(
-                        serializers.ProviderUnavailableErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -187,7 +223,7 @@ export class ProviderClient {
     /**
      * Retry the saved provider connection. Requires provider:test. Availability and last test outcome may change and the attempt is recorded, but settings are not replaced. Missing/unreadable credentials or an unusable provider return PROVIDER_UNAVAILABLE; concurrent changes return PROVIDER_CONFIGURATION_CHANGED. Respect Retry-After on RATE_LIMITED. This diagnostic call changes test state, consumes provider-test capacity and does not consume comment submission quota. Available while frozen.
      *
-     * @param {Recoms.EmptyProjectAction} request
+     * @param {Recoms.project.EmptyProjectAction} request
      * @param {ProviderClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Recoms.BadRequestError}
@@ -203,17 +239,17 @@ export class ProviderClient {
      * @throws {@link errors.RecomsTimeoutError}
      *
      * @example
-     *     await client.project.provider.test({})
+     *     await client.project.provider.test()
      */
     public test(
-        request: Recoms.EmptyProjectAction,
+        request: Recoms.project.EmptyProjectAction = {},
         requestOptions?: ProviderClient.RequestOptions,
     ): core.HttpResponsePromise<Recoms.project.TestProviderResponse> {
         return core.HttpResponsePromise.fromPromise(this.__test(request, requestOptions));
     }
 
     private async __test(
-        request: Recoms.EmptyProjectAction,
+        request: Recoms.project.EmptyProjectAction = {},
         requestOptions?: ProviderClient.RequestOptions,
     ): Promise<core.WithRawResponse<Recoms.project.TestProviderResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
@@ -236,7 +272,7 @@ export class ProviderClient {
             queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
             requestType: "json",
             body: mergeAdditionalBodyParameters(
-                serializers.EmptyProjectAction.jsonOrThrow(request, {
+                serializers.project.EmptyProjectAction.jsonOrThrow(request, {
                     unrecognizedObjectKeys: "strip",
                     omitUndefined: true,
                 }),
@@ -264,10 +300,19 @@ export class ProviderClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -277,14 +322,41 @@ export class ProviderClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ConflictError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -295,7 +367,7 @@ export class ProviderClient {
                     );
                 case 429:
                     throw new Recoms.TooManyRequestsError(
-                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -306,7 +378,7 @@ export class ProviderClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -317,7 +389,7 @@ export class ProviderClient {
                     );
                 case 502:
                     throw new Recoms.BadGatewayError(
-                        serializers.ProviderUnavailableErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

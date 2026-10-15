@@ -15,7 +15,7 @@ export const ProjectAnalytics: core.serialization.ObjectSchema<
     analytics: DiscussionAnalytics,
     moderation: ModerationAnalytics,
     summary: ProjectCommentModerationSummary,
-    planUsage: ProjectUsage.nullable(),
+    planUsage: ProjectUsage,
 });
 
 export declare namespace ProjectAnalytics {
@@ -23,6 +23,6 @@ export declare namespace ProjectAnalytics {
         analytics: DiscussionAnalytics.Raw;
         moderation: ModerationAnalytics.Raw;
         summary: ProjectCommentModerationSummary.Raw;
-        planUsage?: ProjectUsage.Raw | null;
+        planUsage: ProjectUsage.Raw;
     }
 }

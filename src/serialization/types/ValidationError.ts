@@ -5,15 +5,18 @@ import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { ErrorMessage } from "./ErrorMessage.js";
 import { ValidationDetails } from "./ValidationDetails.js";
+import { ValidationErrorCode } from "./ValidationErrorCode.js";
 
 export const ValidationError: core.serialization.ObjectSchema<serializers.ValidationError.Raw, Recoms.ValidationError> =
     core.serialization.object({
+        code: ValidationErrorCode,
         message: ErrorMessage,
         details: ValidationDetails,
     });
 
 export declare namespace ValidationError {
     export interface Raw {
+        code: ValidationErrorCode.Raw;
         message: ErrorMessage.Raw;
         details: ValidationDetails.Raw;
     }

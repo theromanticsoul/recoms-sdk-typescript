@@ -33,6 +33,7 @@ export class ResourcesClient {
      *
      * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
+     * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
@@ -99,10 +100,30 @@ export class ResourcesClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -113,7 +134,7 @@ export class ResourcesClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,

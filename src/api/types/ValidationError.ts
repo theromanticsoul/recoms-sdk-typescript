@@ -6,6 +6,8 @@ import type * as Recoms from "../index.js";
  * Request validation failure; details is required and contains at least one issue.
  */
 export interface ValidationError {
+    /** Invalid request fields or request section. Correct the fields identified by details before retrying. */
+    code: Recoms.ValidationErrorCode;
     message: Recoms.ErrorMessage;
     details: Recoms.ValidationDetails;
 }

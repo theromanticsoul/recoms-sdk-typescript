@@ -5,9 +5,9 @@ import * as errors from "../../errors/index.js";
 import type * as Recoms from "../index.js";
 
 export class ContentTooLargeError extends errors.RecomsError {
-    public declare readonly body: Recoms.RequestBodyTooLargeErrorResponse;
+    public declare readonly body: Recoms.ErrorResponse;
 
-    constructor(body: Recoms.RequestBodyTooLargeErrorResponse, rawResponse?: core.RawResponse) {
+    constructor(body: Recoms.ErrorResponse, rawResponse?: core.RawResponse) {
         super({
             message: "ContentTooLargeError",
             statusCode: 413,

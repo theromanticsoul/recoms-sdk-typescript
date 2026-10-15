@@ -38,6 +38,7 @@ export class CommentsClient {
      *
      * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
+     * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
      * @throws {@link errors.RecomsTimeoutError}
@@ -108,10 +109,30 @@ export class CommentsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                            throw new Recoms.BadRequestError(
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                    unrecognizedObjectKeys: "passthrough",
+                                    allowUnrecognizedUnionMembers: true,
+                                    allowUnrecognizedEnumValues: true,
+                                    skipValidation: true,
+                                    breadcrumbsPrefix: ["response"],
+                                }),
+                                _response.rawResponse,
+                            );
                         case 401:
                             throw new Recoms.UnauthorizedError(
-                                serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                    unrecognizedObjectKeys: "passthrough",
+                                    allowUnrecognizedUnionMembers: true,
+                                    allowUnrecognizedEnumValues: true,
+                                    skipValidation: true,
+                                    breadcrumbsPrefix: ["response"],
+                                }),
+                                _response.rawResponse,
+                            );
+                        case 403:
+                            throw new Recoms.ForbiddenError(
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -122,7 +143,7 @@ export class CommentsClient {
                             );
                         case 500:
                             throw new Recoms.InternalServerError(
-                                serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -167,6 +188,7 @@ export class CommentsClient {
      * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
      * @throws {@link Recoms.PaymentRequiredError}
+     * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
      * @throws {@link Recoms.MethodNotAllowedError}
      * @throws {@link Recoms.ConflictError}
@@ -254,10 +276,19 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -267,12 +298,41 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 402:
-                    throw new Recoms.PaymentRequiredError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.PaymentRequiredError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 405:
                     throw new Recoms.MethodNotAllowedError(
-                        serializers.MethodNotAllowedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -282,10 +342,19 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ConflictError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -296,7 +365,7 @@ export class CommentsClient {
                     );
                 case 429:
                     throw new Recoms.TooManyRequestsError(
-                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -307,7 +376,7 @@ export class CommentsClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -338,6 +407,7 @@ export class CommentsClient {
      *
      * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
+     * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
@@ -398,10 +468,30 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -411,10 +501,19 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -514,10 +613,19 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -527,12 +635,30 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 405:
                     throw new Recoms.MethodNotAllowedError(
-                        serializers.MethodNotAllowedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -542,10 +668,19 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ConflictError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -556,7 +691,7 @@ export class CommentsClient {
                     );
                 case 429:
                     throw new Recoms.TooManyRequestsError(
-                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -567,7 +702,7 @@ export class CommentsClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -678,10 +813,19 @@ export class CommentsClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -691,14 +835,41 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 402:
-                    throw new Recoms.PaymentRequiredError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.PaymentRequiredError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 405:
                     throw new Recoms.MethodNotAllowedError(
-                        serializers.MethodNotAllowedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -708,10 +879,19 @@ export class CommentsClient {
                         _response.rawResponse,
                     );
                 case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ConflictError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -722,7 +902,7 @@ export class CommentsClient {
                     );
                 case 429:
                     throw new Recoms.TooManyRequestsError(
-                        serializers.RateLimitedErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -733,7 +913,7 @@ export class CommentsClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -764,6 +944,7 @@ export class CommentsClient {
      *
      * @throws {@link Recoms.BadRequestError}
      * @throws {@link Recoms.UnauthorizedError}
+     * @throws {@link Recoms.ForbiddenError}
      * @throws {@link Recoms.NotFoundError}
      * @throws {@link Recoms.InternalServerError}
      * @throws {@link errors.RecomsError}
@@ -829,10 +1010,30 @@ export class CommentsClient {
                 if (_response.error.reason === "status-code") {
                     switch (_response.error.statusCode) {
                         case 400:
-                            throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                            throw new Recoms.BadRequestError(
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                    unrecognizedObjectKeys: "passthrough",
+                                    allowUnrecognizedUnionMembers: true,
+                                    allowUnrecognizedEnumValues: true,
+                                    skipValidation: true,
+                                    breadcrumbsPrefix: ["response"],
+                                }),
+                                _response.rawResponse,
+                            );
                         case 401:
                             throw new Recoms.UnauthorizedError(
-                                serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                    unrecognizedObjectKeys: "passthrough",
+                                    allowUnrecognizedUnionMembers: true,
+                                    allowUnrecognizedEnumValues: true,
+                                    skipValidation: true,
+                                    breadcrumbsPrefix: ["response"],
+                                }),
+                                _response.rawResponse,
+                            );
+                        case 403:
+                            throw new Recoms.ForbiddenError(
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,
@@ -842,10 +1043,19 @@ export class CommentsClient {
                                 _response.rawResponse,
                             );
                         case 404:
-                            throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                            throw new Recoms.NotFoundError(
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                                    unrecognizedObjectKeys: "passthrough",
+                                    allowUnrecognizedUnionMembers: true,
+                                    allowUnrecognizedEnumValues: true,
+                                    skipValidation: true,
+                                    breadcrumbsPrefix: ["response"],
+                                }),
+                                _response.rawResponse,
+                            );
                         case 500:
                             throw new Recoms.InternalServerError(
-                                serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                                serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                                     unrecognizedObjectKeys: "passthrough",
                                     allowUnrecognizedUnionMembers: true,
                                     allowUnrecognizedEnumValues: true,

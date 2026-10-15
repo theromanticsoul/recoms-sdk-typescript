@@ -9,5 +9,5 @@ export interface ProjectAnalytics {
     analytics: Recoms.DiscussionAnalytics;
     moderation: Recoms.ModerationAnalytics;
     summary: Recoms.ProjectCommentModerationSummary;
-    planUsage: Recoms.ProjectUsage | null;
+    planUsage: Recoms.ProjectUsage;
 }

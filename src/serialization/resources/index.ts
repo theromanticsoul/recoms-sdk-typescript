@@ -1,8 +1,6 @@
 export * from "./comments/client/requests/index.js";
 export * as comments from "./comments/index.js";
 export * from "./comments/types/index.js";
-export * as dashboard from "./dashboard/index.js";
-export * from "./dashboard/types/index.js";
 export * as me from "./me/index.js";
 export * from "./project/client/requests/index.js";
 export * as project from "./project/index.js";

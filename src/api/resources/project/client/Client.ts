@@ -104,10 +104,19 @@ export class ProjectClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -117,12 +126,30 @@ export class ProjectClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -223,10 +250,19 @@ export class ProjectClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -236,12 +272,30 @@ export class ProjectClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 413:
                     throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -252,7 +306,7 @@ export class ProjectClient {
                     );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -355,10 +409,19 @@ export class ProjectClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -368,12 +431,30 @@ export class ProjectClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -455,10 +536,19 @@ export class ProjectClient {
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.BadRequestError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 401:
                     throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -468,12 +558,30 @@ export class ProjectClient {
                         _response.rawResponse,
                     );
                 case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.ForbiddenError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
+                    throw new Recoms.NotFoundError(
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
+                            unrecognizedObjectKeys: "passthrough",
+                            allowUnrecognizedUnionMembers: true,
+                            allowUnrecognizedEnumValues: true,
+                            skipValidation: true,
+                            breadcrumbsPrefix: ["response"],
+                        }),
+                        _response.rawResponse,
+                    );
                 case 500:
                     throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
+                        serializers.ErrorResponse.parseOrThrow(_response.error.body, {
                             unrecognizedObjectKeys: "passthrough",
                             allowUnrecognizedUnionMembers: true,
                             allowUnrecognizedEnumValues: true,
@@ -492,396 +600,5 @@ export class ProjectClient {
         }
 
         return handleNonStatusCodeError(_response.error, _response.rawResponse, "GET", "/v1/project/usage");
-    }
-
-    /**
-     * Freeze an ACTIVE Free project and release its owner's active Free slot. Requires verified owner access; project-only API keys do not grant this authority. Comments, revisions, reactions and memberships are retained. Reads and removals remain available; new submissions, edits and reaction additions are blocked. Usage is not reset. Activation can restore access subject to Free allocation and membership requirements. Repeating after success returns PROJECT_STATE_CONFLICT; refresh before retrying an uncertain result. Send an empty JSON object.
-     *
-     * @param {Recoms.EmptyProjectAction} request
-     * @param {ProjectClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Recoms.BadRequestError}
-     * @throws {@link Recoms.UnauthorizedError}
-     * @throws {@link Recoms.ForbiddenError}
-     * @throws {@link Recoms.NotFoundError}
-     * @throws {@link Recoms.ConflictError}
-     * @throws {@link Recoms.ContentTooLargeError}
-     * @throws {@link Recoms.InternalServerError}
-     * @throws {@link errors.RecomsError}
-     * @throws {@link errors.RecomsTimeoutError}
-     *
-     * @example
-     *     await client.project.freeze({})
-     */
-    public freeze(
-        request: Recoms.EmptyProjectAction,
-        requestOptions?: ProjectClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.FreezeProjectResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__freeze(request, requestOptions));
-    }
-
-    private async __freeze(
-        request: Recoms.EmptyProjectAction,
-        requestOptions?: ProjectClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.FreezeProjectResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            getIdempotencyHeaders(),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.RecomsEnvironment.Default,
-                "v1/project/freeze",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(
-                serializers.EmptyProjectAction.jsonOrThrow(request, {
-                    unrecognizedObjectKeys: "strip",
-                    omitUndefined: true,
-                }),
-                requestOptions?.additionalBodyParameters,
-            ),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: serializers.FreezeProjectResponse.parseOrThrow(_response.body, {
-                    unrecognizedObjectKeys: "passthrough",
-                    allowUnrecognizedUnionMembers: true,
-                    allowUnrecognizedEnumValues: true,
-                    skipValidation: true,
-                    breadcrumbsPrefix: ["response"],
-                }),
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
-                case 401:
-                    throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
-                case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
-                case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
-                case 413:
-                    throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.RecomsError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/project/freeze");
-    }
-
-    /**
-     * Activate a FROZEN Free project. Requires verified owner access; project-only API keys do not grant this authority. At most two owned Free projects may be ACTIVE. If both slots are occupied, supply another owned ACTIVE Free project's freezeProjectId. Non-owner memberships require confirmMemberRemoval=true and are removed before activation; pending invitations are canceled. Free allocation changes are atomic, but membership removal can precede a failed activation: ACTIVATION_PARTIALLY_COMPLETED requires refreshing billing and members before another attempt. Existing comments and usage are retained. Idempotency-Key replay is not supported.
-     *
-     * @param {Recoms.ActivateProject} request
-     * @param {ProjectClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Recoms.BadRequestError}
-     * @throws {@link Recoms.UnauthorizedError}
-     * @throws {@link Recoms.ForbiddenError}
-     * @throws {@link Recoms.NotFoundError}
-     * @throws {@link Recoms.ConflictError}
-     * @throws {@link Recoms.ContentTooLargeError}
-     * @throws {@link Recoms.InternalServerError}
-     * @throws {@link errors.RecomsError}
-     * @throws {@link errors.RecomsTimeoutError}
-     *
-     * @example
-     *     await client.project.activate({
-     *         confirmMemberRemoval: false
-     *     })
-     */
-    public activate(
-        request: Recoms.ActivateProject = {},
-        requestOptions?: ProjectClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.ActivateProjectResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__activate(request, requestOptions));
-    }
-
-    private async __activate(
-        request: Recoms.ActivateProject = {},
-        requestOptions?: ProjectClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.ActivateProjectResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            getIdempotencyHeaders(),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.RecomsEnvironment.Default,
-                "v1/project/activate",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(
-                serializers.ActivateProject.jsonOrThrow(request, {
-                    unrecognizedObjectKeys: "strip",
-                    omitUndefined: true,
-                }),
-                requestOptions?.additionalBodyParameters,
-            ),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: serializers.ActivateProjectResponse.parseOrThrow(_response.body, {
-                    unrecognizedObjectKeys: "passthrough",
-                    allowUnrecognizedUnionMembers: true,
-                    allowUnrecognizedEnumValues: true,
-                    skipValidation: true,
-                    breadcrumbsPrefix: ["response"],
-                }),
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
-                case 401:
-                    throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
-                case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
-                case 409:
-                    throw new Recoms.ConflictError(_response.error.body, _response.rawResponse);
-                case 413:
-                    throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.RecomsError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/project/activate");
-    }
-
-    /**
-     * Transfer the project to another existing member. Requires verified owner access; project-only API keys do not grant this authority. targetUserId identifies the target RECOMS account, not an external comment author or membership. The target becomes the sole owner and the previous owner becomes admin atomically. Existing project data remains. Obtain explicit consent before changing ownership. Missing target membership returns VALIDATION_ERROR; changed ownership returns FORBIDDEN. Refresh membership after an uncertain outcome instead of automatically retrying.
-     *
-     * @param {Recoms.TransferProjectOwnership} request
-     * @param {ProjectClient.RequestOptions} requestOptions - Request-specific configuration.
-     *
-     * @throws {@link Recoms.BadRequestError}
-     * @throws {@link Recoms.UnauthorizedError}
-     * @throws {@link Recoms.ForbiddenError}
-     * @throws {@link Recoms.NotFoundError}
-     * @throws {@link Recoms.ContentTooLargeError}
-     * @throws {@link Recoms.InternalServerError}
-     * @throws {@link errors.RecomsError}
-     * @throws {@link errors.RecomsTimeoutError}
-     *
-     * @example
-     *     await client.project.transferOwnership({
-     *         targetUserId: "0198a6ec-9e00-7000-8000-000000000002"
-     *     })
-     */
-    public transferOwnership(
-        request: Recoms.TransferProjectOwnership,
-        requestOptions?: ProjectClient.RequestOptions,
-    ): core.HttpResponsePromise<Recoms.TransferOwnershipProjectResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__transferOwnership(request, requestOptions));
-    }
-
-    private async __transferOwnership(
-        request: Recoms.TransferProjectOwnership,
-        requestOptions?: ProjectClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Recoms.TransferOwnershipProjectResponse>> {
-        const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
-        const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
-            _authRequest.headers,
-            this._options?.headers,
-            getIdempotencyHeaders(),
-            requestOptions?.headers,
-        );
-        const _response = await core.fetcher({
-            url: core.url.join(
-                (await core.Supplier.get(this._options.baseUrl)) ??
-                    (await core.Supplier.get(this._options.environment)) ??
-                    environments.RecomsEnvironment.Default,
-                "v1/project/ownership",
-            ),
-            method: "POST",
-            headers: _headers,
-            contentType: "application/json",
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
-            requestType: "json",
-            body: mergeAdditionalBodyParameters(
-                serializers.TransferProjectOwnership.jsonOrThrow(request, {
-                    unrecognizedObjectKeys: "strip",
-                    omitUndefined: true,
-                }),
-                requestOptions?.additionalBodyParameters,
-            ),
-            timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
-            maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
-            abortSignal: requestOptions?.abortSignal,
-            fetchFn: this._options?.fetch,
-            logging: this._options.logging,
-        });
-        if (_response.ok) {
-            return {
-                data: serializers.TransferOwnershipProjectResponse.parseOrThrow(_response.body, {
-                    unrecognizedObjectKeys: "passthrough",
-                    allowUnrecognizedUnionMembers: true,
-                    allowUnrecognizedEnumValues: true,
-                    skipValidation: true,
-                    breadcrumbsPrefix: ["response"],
-                }),
-                rawResponse: _response.rawResponse,
-            };
-        }
-
-        if (_response.error.reason === "status-code") {
-            switch (_response.error.statusCode) {
-                case 400:
-                    throw new Recoms.BadRequestError(_response.error.body, _response.rawResponse);
-                case 401:
-                    throw new Recoms.UnauthorizedError(
-                        serializers.AuthenticationRequiredErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 403:
-                    throw new Recoms.ForbiddenError(_response.error.body, _response.rawResponse);
-                case 404:
-                    throw new Recoms.NotFoundError(_response.error.body, _response.rawResponse);
-                case 413:
-                    throw new Recoms.ContentTooLargeError(
-                        serializers.RequestBodyTooLargeErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                case 500:
-                    throw new Recoms.InternalServerError(
-                        serializers.InternalErrorResponse.parseOrThrow(_response.error.body, {
-                            unrecognizedObjectKeys: "passthrough",
-                            allowUnrecognizedUnionMembers: true,
-                            allowUnrecognizedEnumValues: true,
-                            skipValidation: true,
-                            breadcrumbsPrefix: ["response"],
-                        }),
-                        _response.rawResponse,
-                    );
-                default:
-                    throw new errors.RecomsError({
-                        statusCode: _response.error.statusCode,
-                        body: _response.error.body,
-                        rawResponse: _response.rawResponse,
-                    });
-            }
-        }
-
-        return handleNonStatusCodeError(_response.error, _response.rawResponse, "POST", "/v1/project/ownership");
     }
 }

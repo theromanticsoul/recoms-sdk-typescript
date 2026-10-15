@@ -41,7 +41,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -64,7 +73,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "AUTHENTICATION_REQUIRED", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -87,7 +105,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -110,7 +137,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -133,7 +169,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -156,7 +201,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "REQUEST_BODY_TOO_LARGE", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -179,7 +233,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "RATE_LIMITED", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -202,7 +265,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "INTERNAL_ERROR", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
@@ -225,7 +297,16 @@ describe("ModerationClient", () => {
         const server = mockServerPool.createServer();
         const client = new RecomsClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { moderationPolicy: "x", exampleComment: "x" };
-        const rawResponseBody = { error: { code: "PROVIDER_UNAVAILABLE", message: "message" } };
+        const rawResponseBody = {
+            error: {
+                code: "VALIDATION_ERROR",
+                message: "message",
+                details: [
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                    { location: "body", path: ["path", "path"], rule: "invalid_json" },
+                ],
+            },
+        };
 
         server
             .mockEndpoint()
