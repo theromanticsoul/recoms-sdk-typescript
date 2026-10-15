@@ -4,6 +4,7 @@ import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
 import { ProjectCommentListRowStatus } from "./ProjectCommentListRowStatus.js";
+import { ProjectCommentListRowUser } from "./ProjectCommentListRowUser.js";
 import { ProjectCommentRevision } from "./ProjectCommentRevision.js";
 
 export const ProjectCommentListRow: core.serialization.ObjectSchema<
@@ -12,7 +13,8 @@ export const ProjectCommentListRow: core.serialization.ObjectSchema<
 > = core.serialization.object({
     id: core.serialization.string(),
     resourceId: core.serialization.string(),
-    authorUserId: core.serialization.string(),
+    authorUserId: core.serialization.string().nullable(),
+    user: ProjectCommentListRowUser.nullable(),
     parentId: core.serialization.string().nullable(),
     rootId: core.serialization.string(),
     latestRevision: ProjectCommentRevision.nullable(),
@@ -29,7 +31,8 @@ export declare namespace ProjectCommentListRow {
     export interface Raw {
         id: string;
         resourceId: string;
-        authorUserId: string;
+        authorUserId?: string | null;
+        user?: ProjectCommentListRowUser.Raw | null;
         parentId?: string | null;
         rootId: string;
         latestRevision?: ProjectCommentRevision.Raw | null;

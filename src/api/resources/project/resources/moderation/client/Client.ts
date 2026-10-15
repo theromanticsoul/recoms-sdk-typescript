@@ -26,7 +26,7 @@ export class ModerationClient {
     }
 
     /**
-     * Test draft rules against example text using the current provider. Requires provider:test. No policy or comment is saved; no submission quota is consumed. The provider attempt is recorded and the separate provider-test rate limit applies. ALLOWED and DISALLOWED are successful test outcomes. Provider absence or technical failure returns PROVIDER_UNAVAILABLE rather than a content rejection. RATE_LIMITED includes Retry-After. Available while frozen.
+     * Test draft rules against example text using the current provider. Requires provider:test. No policy or comment is saved; no submission quota is consumed. The provider attempt is recorded and the separate provider-test rate limit applies. ALLOWED and DISALLOWED are successful test outcomes. Provider absence or technical failure returns PROVIDER_UNAVAILABLE rather than a content rejection. RATE_LIMITED includes Retry-After. An uncertain outcome cannot be recovered through a saved test result: do not retry automatically, because another attempt consumes provider capacity. An optional getProjectContext read requires the separate project:read permission and cannot recover this draft's verdict. Available while frozen.
      *
      * @param {Recoms.project.TestModerationPolicy} request
      * @param {ModerationClient.RequestOptions} requestOptions - Request-specific configuration.

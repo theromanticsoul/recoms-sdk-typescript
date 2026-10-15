@@ -3,12 +3,13 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { AuthorBlockedError } from "./AuthorBlockedError.js";
 import { OperationError } from "./OperationError.js";
 import { ValidationError } from "./ValidationError.js";
 
 export const ApiError: core.serialization.Schema<serializers.ApiError.Raw, Recoms.ApiError> =
-    core.serialization.undiscriminatedUnion([ValidationError, OperationError]);
+    core.serialization.undiscriminatedUnion([ValidationError, OperationError, AuthorBlockedError]);
 
 export declare namespace ApiError {
-    export type Raw = ValidationError.Raw | OperationError.Raw;
+    export type Raw = ValidationError.Raw | OperationError.Raw | AuthorBlockedError.Raw;
 }

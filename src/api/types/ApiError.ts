@@ -5,4 +5,4 @@ import type * as Recoms from "../index.js";
 /**
  * Machine-readable API failure. Use code and the operation's recovery guidance.
  */
-export type ApiError = Recoms.ValidationError | Recoms.OperationError;
+export type ApiError = Recoms.ValidationError | Recoms.OperationError | Recoms.AuthorBlockedError;

@@ -23,7 +23,7 @@ export interface CreateCommentRequest {
     idempotencyKey?: string;
     /** Opaque identifier assigned by your backend to the resource being discussed, such as an article or product. Use the same value for its entire discussion. Required, 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. Slashes are accepted; URL-encode it in query parameters. This is an identifier, not a resource URL. */
     resourceId: string;
-    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    /** Stable user identifier from your application, supplied by your backend after authenticating the end user. Use your application's user ID, not a RECOMS account ID or a display name. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. */
     authorUserId: string;
     /** Markdown source, preserved without trimming. Must contain non-whitespace text and at most 2,000 Unicode code points. U+0000 and unpaired UTF-16 surrogates are forbidden. Render Markdown safely in your application's UI. */
     content: string;

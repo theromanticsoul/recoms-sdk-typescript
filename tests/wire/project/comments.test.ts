@@ -150,6 +150,11 @@ describe("CommentsClient", () => {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "resourceId",
                     authorUserId: "authorUserId",
+                    user: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        displayName: "Alex",
+                        avatarUrl: "https://example.com/avatars/42.png",
+                    },
                     parentId: "0198a6ec-9e00-7000-8000-000000000001",
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     latestRevision: {
@@ -190,13 +195,20 @@ describe("CommentsClient", () => {
             .jsonBody(rawResponseBody)
             .build();
 
-        const response = await client.project.comments.list();
+        const response = await client.project.comments.list({
+            authorUserId: "usr_42",
+        });
         expect(response).toEqual({
             data: [
                 {
                     id: "0198a6ec-9e00-7000-8000-000000000001",
                     resourceId: "resourceId",
                     authorUserId: "authorUserId",
+                    user: {
+                        id: "0198a6ec-9e00-7000-8000-000000000001",
+                        displayName: "Alex",
+                        avatarUrl: "https://example.com/avatars/42.png",
+                    },
                     parentId: "0198a6ec-9e00-7000-8000-000000000001",
                     rootId: "0198a6ec-9e00-7000-8000-000000000001",
                     latestRevision: {

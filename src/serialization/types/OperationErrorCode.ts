@@ -11,6 +11,9 @@ export const OperationErrorCode: core.serialization.Schema<
     "INVALID_CURSOR",
     "AUTHENTICATION_REQUIRED",
     "FORBIDDEN",
+    "USER_ALREADY_EXISTS",
+    "USER_DELETION_IN_PROGRESS",
+    "WEBHOOK_DELIVERY_IN_PROGRESS",
     "REVISION_ALREADY_REVIEWED",
     "AUTHORSHIP_REQUIRED",
     "COMMENT_NOT_FOUND",
@@ -34,6 +37,9 @@ export declare namespace OperationErrorCode {
         | "INVALID_CURSOR"
         | "AUTHENTICATION_REQUIRED"
         | "FORBIDDEN"
+        | "USER_ALREADY_EXISTS"
+        | "USER_DELETION_IN_PROGRESS"
+        | "WEBHOOK_DELIVERY_IN_PROGRESS"
         | "REVISION_ALREADY_REVIEWED"
         | "AUTHORSHIP_REQUIRED"
         | "COMMENT_NOT_FOUND"

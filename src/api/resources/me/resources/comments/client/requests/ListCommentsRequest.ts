@@ -23,6 +23,6 @@ export interface ListCommentsRequest {
     limit?: number;
     /** Opaque continuation token returned as nextCursor by the same collection. Omit it for the first page. Pass it unchanged with the same project, collection, filters and sort. Do not decode, construct or reuse it for another query; incompatible tokens return INVALID_CURSOR. No fixed maximum token length is defined. */
     cursor?: string;
-    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    /** UTF-8 percent-encoded author ID from your application. Encode once with JavaScript encodeURIComponent(id) or Python urllib.parse.quote(id, safe="") before supplying this HTTP header or SDK header argument. usr_42 stays usr_42; a literal % becomes %25. The API decodes exactly once, then validates the original 1–512 Unicode code point identifier and checks ownership. Plus is not a space escape. Invalid escapes, UTF-8, null characters or decoded identifiers return VALIDATION_ERROR. Maximum encoded length is 6,144 ASCII characters. JSON authorUserId fields and response IDs are not encoded. */
     authorUserId: string;
 }

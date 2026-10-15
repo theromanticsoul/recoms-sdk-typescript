@@ -7,8 +7,10 @@ export interface ProjectCommentListRow {
     id: string;
     /** Opaque integrator resource identifier, scoped to the project. */
     resourceId: string;
-    /** Stable external author identifier supplied by the integrator. */
-    authorUserId: string;
+    /** Stable external author identifier supplied by the integrator; null only for an anonymized deleted node after user erasure. */
+    authorUserId: string | null;
+    /** Current optional profile. Null only for an anonymized deleted structural node. */
+    user: Recoms.ProjectCommentListRowUser | null;
     /** Direct parent identifier; null for a root comment. */
     parentId: string | null;
     /** Identifier of the thread's root comment. */

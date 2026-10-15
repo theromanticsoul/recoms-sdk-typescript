@@ -157,7 +157,9 @@ export class CommentsClient {
      * @throws {@link errors.RecomsTimeoutError}
      *
      * @example
-     *     await client.project.comments.list()
+     *     await client.project.comments.list({
+     *         authorUserId: "usr_42"
+     *     })
      */
     public list(
         request: Recoms.project.ListCommentsRequest = {},
@@ -170,8 +172,9 @@ export class CommentsClient {
         request: Recoms.project.ListCommentsRequest = {},
         requestOptions?: CommentsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Recoms.ProjectComments>> {
-        const { search, status, sort, limit, cursor } = request;
+        const { authorUserId, search, status, sort, limit, cursor } = request;
         const _queryParams: Record<string, unknown> = {
+            authorUserId,
             search,
             status:
                 status != null
@@ -299,7 +302,7 @@ export class CommentsClient {
     }
 
     /**
-     * Approve or reject the specified latest PENDING or FAILED revision. Requires comments:review. Approval publishes that revision; rejection retains an earlier approved version. A key decision has no verified moderator-account attribution. A stale or already decided revision returns REVISION_ALREADY_REVIEWED. Refresh before another action or after an uncertain network outcome; this operation does not replay Idempotency-Key. Available while frozen.
+     * Approve or reject the specified latest PENDING or FAILED revision. Requires comments:review. Approval publishes that revision; rejection retains an earlier approved version. A key decision has no verified moderator-account attribution. A stale or already decided revision returns REVISION_ALREADY_REVIEWED. After a conflict or uncertain network outcome, use listProjectComments with comments:read to inspect the comment's latest revision ID and decision before considering another action. comments:review does not imply comments:read; without the read grant, stop and report the unknown outcome for an appropriately scoped caller to verify. Do not submit a decision for a different revision automatically. This operation does not replay Idempotency-Key. Available while frozen.
      *
      * @param {Recoms.project.ReviewComment} request
      * @param {CommentsClient.RequestOptions} requestOptions - Request-specific configuration.

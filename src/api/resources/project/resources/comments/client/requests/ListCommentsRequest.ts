@@ -4,9 +4,13 @@ import type * as Recoms from "../../../../../../index.js";
 
 /**
  * @example
- *     {}
+ *     {
+ *         authorUserId: "usr_42"
+ *     }
  */
 export interface ListCommentsRequest {
+    /** Optional exact external author identity filter, for a user's comment history. Combines with status/search/sort and must remain unchanged when continuing a cursor. */
+    authorUserId?: string;
     /** Text search in comment content; at most 512 Unicode code points. Omit or use an empty string for no text filter. */
     search?: string;
     /** Filter by latest revision decision or deleted node. ALL and unpublished states require moderation access. */

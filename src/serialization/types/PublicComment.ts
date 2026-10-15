@@ -3,13 +3,15 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { CommentUser } from "./CommentUser.js";
 import { PublicCommentStatus } from "./PublicCommentStatus.js";
 
 export const PublicComment: core.serialization.ObjectSchema<serializers.PublicComment.Raw, Recoms.PublicComment> =
     core.serialization.object({
         id: core.serialization.string(),
         resourceId: core.serialization.string(),
-        authorUserId: core.serialization.string(),
+        authorUserId: core.serialization.string().nullable(),
+        user: CommentUser.nullable(),
         parentId: core.serialization.string().nullable(),
         rootId: core.serialization.string(),
         content: core.serialization.string().nullable(),
@@ -26,7 +28,8 @@ export declare namespace PublicComment {
     export interface Raw {
         id: string;
         resourceId: string;
-        authorUserId: string;
+        authorUserId?: string | null;
+        user?: CommentUser.Raw | null;
         parentId?: string | null;
         rootId: string;
         content?: string | null;

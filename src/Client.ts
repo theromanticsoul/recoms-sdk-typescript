@@ -5,6 +5,8 @@ import { MeClient } from "./api/resources/me/client/Client.js";
 import { ProjectClient } from "./api/resources/project/client/Client.js";
 import { ReactionsClient } from "./api/resources/reactions/client/Client.js";
 import { ResourcesClient } from "./api/resources/resources/client/Client.js";
+import { UsersClient } from "./api/resources/users/client/Client.js";
+import { WebhooksClient } from "./api/resources/webhooks/client/Client.js";
 import type { BaseClientOptions, BaseRequestOptions } from "./BaseClient.js";
 import { type NormalizedClientOptionsWithAuth, normalizeClientOptionsWithAuth } from "./BaseClient.js";
 import * as core from "./core/index.js";
@@ -20,6 +22,8 @@ export class RecomsClient {
     protected _resources: ResourcesClient | undefined;
     protected _comments: CommentsClient | undefined;
     protected _reactions: ReactionsClient | undefined;
+    protected _users: UsersClient | undefined;
+    protected _webhooks: WebhooksClient | undefined;
     protected _project: ProjectClient | undefined;
     protected _me: MeClient | undefined;
 
@@ -37,6 +41,14 @@ export class RecomsClient {
 
     public get reactions(): ReactionsClient {
         return (this._reactions ??= new ReactionsClient(this._options));
+    }
+
+    public get users(): UsersClient {
+        return (this._users ??= new UsersClient(this._options));
+    }
+
+    public get webhooks(): WebhooksClient {
+        return (this._webhooks ??= new WebhooksClient(this._options));
     }
 
     public get project(): ProjectClient {

@@ -11,7 +11,7 @@
 export interface RemoveReactionsRequest {
     /** RECOMS-generated UUIDv7 identifying a comment in the authenticated project. Copy the identifier from a response; UUID input syntax is validated. */
     commentId: string;
-    /** Stable external user identifier assigned by your backend after authenticating the end user. Required for every author; anonymous authors are not supported. Accepts 1–512 Unicode code points; U+0000 and unpaired UTF-16 surrogates are forbidden. This is not a RECOMS dashboard account ID or a display name. */
+    /** UTF-8 percent-encoded author ID from your application. Encode once with JavaScript encodeURIComponent(id) or Python urllib.parse.quote(id, safe="") before supplying this HTTP header or SDK header argument. usr_42 stays usr_42; a literal % becomes %25. The API decodes exactly once, then validates the original 1–512 Unicode code point identifier and checks ownership. Plus is not a space escape. Invalid escapes, UTF-8, null characters or decoded identifiers return VALIDATION_ERROR. Maximum encoded length is 6,144 ASCII characters. JSON authorUserId fields and response IDs are not encoded. */
     authorUserId: string;
     /** Optional client-generated UUID for one mutation. A successful committed result is replayed for 24 hours for the same project, author, method, path, key and request. Reusing the key with different input returns 409 IDEMPOTENCY_KEY_REUSED. Failed requests do not reserve the key. Preserve this key when retrying after an uncertain network outcome. */
     idempotencyKey?: string;

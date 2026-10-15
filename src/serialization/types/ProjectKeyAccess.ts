@@ -3,18 +3,19 @@
 import type * as Recoms from "../../api/index.js";
 import * as core from "../../core/index.js";
 import type * as serializers from "../index.js";
+import { ProjectPermission } from "./ProjectPermission.js";
 
 export const ProjectKeyAccess: core.serialization.ObjectSchema<
     serializers.ProjectKeyAccess.Raw,
     Recoms.ProjectKeyAccess
 > = core.serialization.object({
     keyId: core.serialization.string(),
-    permissions: core.serialization.list(core.serialization.string()),
+    permissions: core.serialization.list(ProjectPermission),
 });
 
 export declare namespace ProjectKeyAccess {
     export interface Raw {
         keyId: string;
-        permissions: string[];
+        permissions: ProjectPermission.Raw[];
     }
 }
